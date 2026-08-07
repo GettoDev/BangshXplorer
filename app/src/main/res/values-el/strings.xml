@@ -7,7 +7,7 @@
 
 <resources>
 
-    <string name="app_name">Αρχεία Υλικού</string>
+    <string name="app_name">BangshXplorer</string>
 
     <string name="close">Κλείσιμο</string>
     <string name="copy">Αντιγραφή</string>
@@ -253,7 +253,8 @@
         <item quantity="one">Διαγραφή %1$,d στοιχείου;</item>
         <item quantity="other">Διαγραφή %1$,d στοιχείων;</item>
     </plurals>
-    <string name="file_create_archive_title">Δημιουργία αρχειοθήκης</string>
+    <string name="delete_bnillios">Διαγραφή (BNillios)</string>
+    <string name="file_create_archive_title">Δημιουργία αρχείου</string>
     <string name="file_create_archive_type_zip">.zip</string>
     <string name="file_create_archive_type_tar_xz">.tar.xz</string>
     <string name="file_create_archive_type_7z">.7z</string>
@@ -670,7 +671,7 @@
     <string name="about_licenses_title">Άδειες</string>
     <string name="about_privacy_policy_title">Πολιτική απορρήτου</string>
     <string name="about_author_title">Συντάκτης</string>
-    <string name="about_author_name_title">Hai Zhang</string>
+    <string name="about_author_name_title">GettoDev</string>
     <string name="about_author_github_title">Ακολουθήστε στο GitHub</string>
     <string name="about_author_twitter_title">Ακολουθήστε στο Twitter</string>
 </resources>

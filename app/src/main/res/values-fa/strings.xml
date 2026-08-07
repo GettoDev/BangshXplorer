@@ -9,7 +9,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:ignore="ImpliedQuantity">
 
-    <string name="app_name">پرونده‌های متریال</string>
+    <string name="app_name">BangshXplorer</string>
 
     <string name="close">بستن</string>
     <string name="copy">رونوشت</string>
@@ -245,7 +245,8 @@
         <item quantity="one">تعداد %1$,d مورد حذف شود؟</item>
         <item quantity="other">تعداد %1$,d مورد حذف شوند؟</item>
     </plurals>
-    <string name="file_create_archive_title">ساختن بایگانی</string>
+    <string name="delete_bnillios">حذف (BNillios)</string>
+    <string name="file_create_archive_title">ایجاد آرشیو</string>
     <string name="file_create_archive_type_zip">.zip</string>
     <string name="file_create_archive_type_tar_xz">.tar.xz</string>
     <string name="file_create_archive_type_7z">.7z</string>
@@ -564,7 +565,7 @@
     <string name="about_licenses_title">پروانه‌ها</string>
     <string name="about_privacy_policy_title">سیاست حفظ حریم خصوصی</string>
     <string name="about_author_title">نویسنده</string>
-    <string name="about_author_name_title">Hai Zhang</string>
+    <string name="about_author_name_title">GettoDev</string>
     <string name="about_author_github_title">پی‌گیری در گیت‌هاب</string>
     <string name="about_author_twitter_title">پی‌گیری در توییتر</string>
 </resources>

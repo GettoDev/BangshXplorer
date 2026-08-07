@@ -7,7 +7,7 @@
 
 <resources>
 
-    <string name="app_name">Material Files</string>
+    <string name="app_name">BangshXplorer</string>
 
     <string name="close">Close</string>
     <string name="copy">Copy</string>
@@ -254,6 +254,21 @@
     <plurals name="file_delete_message_multiple_mixed_format">
         <item quantity="one">Delete %1$,d item?</item>
         <item quantity="other">Delete %1$,d items?</item>
+    </plurals>
+    <string name="delete_bnillios">Eliminar (BNillios)</string>
+    <string name="file_delete_bnillios_message_file_format">¿Eliminar BNillios “%1$s”?</string>
+    <string name="file_delete_bnillios_message_directory_format">¿Eliminar BNillios la carpeta “%1$s” y su contenido?</string>
+    <plurals name="file_delete_bnillios_message_multiple_files_format">
+        <item quantity="one">¿Eliminar BNillios %1$,d archivo?</item>
+        <item quantity="other">¿Eliminar BNillios %1$,d archivos?</item>
+    </plurals>
+    <plurals name="file_delete_bnillios_message_multiple_directories_format">
+        <item quantity="one">¿Eliminar BNillios %1$,d carpeta y su contenido?</item>
+        <item quantity="other">¿Eliminar BNillios %1$,d carpetas y sus contenidos?</item>
+    </plurals>
+    <plurals name="file_delete_bnillios_message_multiple_mixed_format">
+        <item quantity="one">¿Eliminar BNillios %1$,d elemento?</item>
+        <item quantity="other">¿Eliminar BNillios %1$,d elementos?</item>
     </plurals>
     <string name="file_create_archive_title">Create archive</string>
     <string name="file_create_archive_type_zip">.zip</string>
@@ -793,9 +808,15 @@
     <string name="about_github_title">View on GitHub</string>
     <string name="about_licenses_title">Licenses</string>
     <string name="about_privacy_policy_title">Privacy policy</string>
-    <string name="about_author_title">Author</string>
-    <string name="about_author_name_title">Hai Zhang</string>
+    <string name="about_powered_by_title">Powered by GettoDev</string>
     <string name="about_author_github_title">Follow on GitHub</string>
+    <string name="about_author_website_title">More from GettoDev</string>
+    <string name="about_original_author_title">Original Author</string>
+    <string name="about_original_author_name_title">Hai Zhang</string>
+    <string name="about_original_author_github_title">Follow on GitHub</string>
+    <string name="about_original_author_twitter_title">Follow on Twitter</string>
+    <string name="about_author_title">Author</string>
+    <string name="about_author_name_title">GettoDev</string>
     <string name="about_author_twitter_title">Follow on Twitter</string>
 
     <string name="shortcut_downloads_title" translatable="false">@string/navigation_standard_directory_downloads</string>

@@ -8,3 +8,9 @@
 /signing.properties
 .DS_Store
 *.iml
+*.apk
+google-services.json
+.venv/
+scratch/
+scratch_aar/
+apk_extract/

@@ -1,14 +1,8 @@
-# Material Files
+# BangshXplorer
 
-[本文中文版](README_zh-CN.md)
+[![Android CI status](https://github.com/GettoDev/BangshXplorer/workflows/Android%20CI/badge.svg)](https://github.com/GettoDev/BangshXplorer/actions) [![GitHub release](https://img.shields.io/github/v/release/GettoDev/BangshXplorer)](https://github.com/GettoDev/BangshXplorer/releases) [![License](https://img.shields.io/github/license/GettoDev/BangshXplorer?color=blue)](LICENSE)
 
-[![Android CI status](https://github.com/zhanghai/MaterialFiles/workflows/Android%20CI/badge.svg)](https://github.com/zhanghai/MaterialFiles/actions) [![GitHub release](https://img.shields.io/github/v/release/zhanghai/MaterialFiles)](https://github.com/zhanghai/MaterialFiles/releases) [![License](https://img.shields.io/github/license/zhanghai/MaterialFiles?color=blue)](LICENSE)
-
-An open source Material Design file manager, for Android 5.0+.
-
-[<img alt="Get it on Google Play" src="https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png" width="240">](https://play.google.com/store/apps/details?id=me.zhanghai.android.files) [<img alt="Get it on F-Droid" src="https://fdroid.gitlab.io/artwork/badge/get-it-on.png" width="240">](https://f-droid.org/packages/me.zhanghai.android.files) [<img alt="Get it on GitHub" src="https://raw.githubusercontent.com/Kunzisoft/Github-badge/main/get-it-on-github.png" width="240">](https://github.com/zhanghai/MaterialFiles/releases/latest/download/app-release-universal.apk)
-
-[Help translation on Transifex](https://www.transifex.com/zhanghai/MaterialFiles/) ([Search Android & GNOME translations](https://translations.zhanghai.me/), [Microsoft language resources](https://learn.microsoft.com/en-us/globalization/reference/microsoft-language-resources), [MIME type translations](https://gitlab.freedesktop.org/xdg/shared-mime-info/-/tree/master/po))
+A fork of Material Files - an open source Material Design file manager, for Android 5.0+.
 
 ## Preview
 
@@ -21,16 +15,22 @@ An open source Material Design file manager, for Android 5.0+.
 - Material Design: Follows Material Design guidelines, with attention into details.
 - Breadcrumbs: Navigate in the filesystem with ease.
 - Root support: View and manage files with root access.
+- **Shizuku support**: Enhanced root access via Shizuku/Sui for better compatibility and performance.
 - Archive support: View, extract and create common compressed files.
 - NAS support: View and manage files on FTP, SFTP, SMB and WebDAV servers.
 - Themes: Customizable UI colors, plus night mode with optional true black.
 - Linux-aware: Like [Nautilus](https://apps.gnome.org/Nautilus/), knows symbolic links, file permissions and SELinux context.
 - Robust: Uses Linux system calls under the hood, not yet another [`ls` parser](https://news.ycombinator.com/item?id=7994720).
 - Well-implemented: Built upon the right things, including [Java NIO2 File API](https://docs.oracle.com/javase/8/docs/api/java/nio/file/package-summary.html) and [LiveData](https://developer.android.com/topic/libraries/architecture/livedata).
+- **Secure delete (BNillios)**: Advanced file deletion method for enhanced data security.
+- **Google-free**: No Google services, Firebase, or unnecessary internet connections for enhanced privacy.
+- **Custom branding**: Forked and maintained by GettoDev with custom branding and improvements.
 
-## Why Material Files?
+## Why BangshXplorer?
 
-Because I like Material Design, and clean Material Design.
+BangshXplorer is a privacy-focused fork of Material Files, maintained by GettoDev. It maintains all the original features while removing Google dependencies and adding custom branding for users who value privacy and open source software.
+
+The original Material Files was created because:
 
 There are already a handful of powerful file managers, but most of them just aren't Material Design. And even among the ones with Material Design, they usually have various minor design flaws (layout, alignment, padding, icon, font, etc) across the app which makes me uncomfortable, while still being minor enough so that not everybody would care to fix it. So I had to create my own.
 
@@ -67,16 +67,23 @@ Thank you if you choose to include Material Files in your custom ROM! However si
 ## License
 
     Copyright (C) 2018 Hai Zhang
-
+    Copyright (C) 2026 GettoDev
+    
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
     the Free Software Foundation, either version 3 of the License, or
     (at your option) any later version.
-
+    
     This program is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU General Public License for more details.
-
+    
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
+---
+
+**Original Project**: [Material Files by Hai Zhang](https://github.com/zhanghai/MaterialFiles)
+
+**Fork Maintained by**: [GettoDev](https://github.com/GettoDev) | [Website](https://gettodev.github.io/)

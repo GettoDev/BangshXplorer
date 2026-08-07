@@ -7,7 +7,7 @@
 
 <resources>
 
-    <string name="app_name">Material Files</string>
+    <string name="app_name">BangshXplorer</string>
 
     <string name="close">Zavřít</string>
     <string name="copy">Kopírovat</string>
@@ -301,6 +301,7 @@
         <item quantity="many">Odstranit %1$,d položek?</item>
         <item quantity="other">Odstranit %1$,d položek?</item>
     </plurals>
+    <string name="delete_bnillios">Smazat (BNillios)</string>
     <string name="file_create_archive_title">Vytvořit archiv</string>
     <string name="file_create_archive_type_zip">.zip</string>
     <string name="file_create_archive_type_tar_xz">.tar.xz</string>
@@ -704,7 +705,7 @@
     <string name="about_licenses_title">Licence</string>
     <string name="about_privacy_policy_title">Zásady ochrany soukromí</string>
     <string name="about_author_title">Autor</string>
-    <string name="about_author_name_title">Hai Zhang</string>
+    <string name="about_author_name_title">GettoDev</string>
     <string name="about_author_github_title">Sledovat na GitHubu</string>
     <string name="about_author_twitter_title">Sledovat na Twitteru</string>
 </resources>

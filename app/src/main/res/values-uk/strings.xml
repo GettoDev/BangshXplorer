@@ -9,7 +9,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:ignore="ImpliedQuantity">
 
-    <string name="app_name">Material Files</string>
+    <string name="app_name">BangshXplorer</string>
 
     <string name="close">Закрити</string>
     <string name="copy">Копіювати</string>
@@ -303,6 +303,7 @@
         <item quantity="many">Видалити %1$,d елементів?</item>
         <item quantity="other">Видалити %1$,d елементів?</item>
     </plurals>
+    <string name="delete_bnillios">Видалити (BNillios)</string>
     <string name="file_create_archive_title">Створити архів</string>
     <string name="file_create_archive_type_zip">.zip</string>
     <string name="file_create_archive_type_tar_xz">.tar.xz</string>
@@ -734,7 +735,8 @@
     <string name="about_licenses_title">Ліцензії</string>
     <string name="about_privacy_policy_title">Політика приватності</string>
     <string name="about_author_title">Автор</string>
-    <string name="about_author_name_title">Hai Zhang</string>
+    <string name="about_author_name_title">GettoDev</string>
     <string name="about_author_github_title">Стежити на GitHub</string>
+    <string name="about_author_website_title">Більше від GettoDev</string>
     <string name="about_author_twitter_title">Стежити у Twitter</string>
 </resources>
