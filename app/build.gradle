@@ -33,6 +33,14 @@ android {
             }
         }
     }
+    signingConfigs {
+        release {
+            storeFile file('../gettodev.jks')
+            storePassword 'RedPoint20$'
+            keyAlias 'bangshxplorer'
+            keyPassword 'RedPoint20$'
+        }
+    }
     buildFeatures {
         aidl = true
         buildConfig = true
@@ -56,6 +64,8 @@ android {
         // For "Invalid package reference in library; not included in Android: javax.security.sasl.
         // Referenced from org.apache.mina.proxy.ProxyAuthException."
         warning 'InvalidPackage', 'MissingTranslation'
+        // SuiFileServiceInterface is a Shizuku service and doesn't need to extend android.app.Service
+        disable 'Instantiatable'
     }
     buildTypes {
         release {

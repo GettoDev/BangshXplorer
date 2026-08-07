@@ -3,6 +3,9 @@ android {
         release {
             def properties
             def propertiesFile = rootProject.file('signing.properties')
+            if (!propertiesFile.exists()) {
+                propertiesFile = rootProject.file('../signing.properties')
+            }
             if (propertiesFile.exists()) {
                 properties = new Properties()
                 properties.load(propertiesFile.newDataInputStream())
@@ -12,7 +15,16 @@ android {
                         System.console()?.readLine('\n' + prompt + ': ')
             }
 
-            storeFile getString('storeFile', 'STORE_FILE', 'Store file')?.with(rootProject.&file)
+            def storeFilePath = getString('storeFile', 'STORE_FILE', 'Store file')
+            if (storeFilePath) {
+                def storeFileLocation = rootProject.file(storeFilePath)
+                if (!storeFileLocation.exists()) {
+                    storeFileLocation = rootProject.file('../' + storeFilePath)
+                }
+                if (storeFileLocation.exists()) {
+                    storeFile storeFileLocation
+                }
+            }
             storePassword getString('storePassword', 'STORE_PASSWORD', 'Store password')
             keyAlias getString('keyAlias', 'KEY_ALIAS', 'Key alias')
             keyPassword getString('keyPassword', 'KEY_PASSWORD', 'Key password')
