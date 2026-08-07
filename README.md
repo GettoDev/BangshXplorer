@@ -1,6 +1,6 @@
 # BangshXplorer
 
-[![Android CI status](https://github.com/GettoDev/BangshXplorer/workflows/Android%20CI/badge.svg)](https://github.com/GettoDev/BangshXplorer/actions) [![GitHub release](https://img.shields.io/github/v/release/GettoDev/BangshXplorer)](https://github.com/GettoDev/BangshXplorer/releases) [![License](https://img.shields.io/github/license/GettoDev/BangshXplorer?color=blue)](LICENSE)
+[![GitHub release](https://img.shields.io/github/v/release/GettoDev/BangshXplorer)](https://github.com/GettoDev/BangshXplorer/releases) [![License](https://img.shields.io/github/license/GettoDev/BangshXplorer?color=blue)](LICENSE)
 
 A fork of Material Files - an open source Material Design file manager, for Android 5.0+.
 
