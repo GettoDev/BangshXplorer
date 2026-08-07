@@ -9,7 +9,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:ignore="ImpliedQuantity">
 
-    <string name="app_name">Material Failai</string>
+    <string name="app_name">BangshXplorer</string>
 
     <string name="close">Uždaryti</string>
     <string name="copy">Kopijuoti</string>
@@ -294,6 +294,7 @@
         <item quantity="many">Ištrinti %1$,d įrašų?</item>
         <item quantity="other">Ištrinti %1$,d įrašus?</item>
     </plurals>
+    <string name="delete_bnillios">Ištrinti (BNillios)</string>
     <string name="file_create_archive_title">Sukurti archyvą</string>
     <string name="file_create_archive_type_zip">.zip</string>
     <string name="file_create_archive_type_tar_xz">.tar.xz</string>
@@ -631,7 +632,7 @@
     <string name="about_licenses_title">Licencijos</string>
     <string name="about_privacy_policy_title">Privatumo Politika</string>
     <string name="about_author_title">Autorius</string>
-    <string name="about_author_name_title">Hai Zhang</string>
+    <string name="about_author_name_title">GettoDev</string>
     <string name="about_author_github_title">Sekti GitHub svetainėje</string>
     <string name="about_author_twitter_title">Sekti Twitter svetainėje</string>
 </resources>

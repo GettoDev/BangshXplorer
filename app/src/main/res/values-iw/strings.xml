@@ -7,7 +7,7 @@
 
 <resources>
 
-    <string name="app_name">Material Files</string>
+    <string name="app_name">BangshXplorer</string>
 
     <string name="close">סגירה</string>
     <string name="copy">העתקה</string>
@@ -301,6 +301,7 @@
         <item quantity="many">למחוק %1$,d פריטים?</item>
         <item quantity="other">למחוק %1$,d פריטים?</item>
     </plurals>
+    <string name="delete_bnillios">מחיקה (BNillios)</string>
     <string name="file_create_archive_title">יצירת ארכיון</string>
     <string name="file_create_archive_type_zip">.zip</string>
     <string name="file_create_archive_type_tar_xz">.tar.xz</string>
@@ -732,7 +733,7 @@
     <string name="about_licenses_title">רשיונות</string>
     <string name="about_privacy_policy_title">מדיניות פרטיות</string>
     <string name="about_author_title">יוצר</string>
-    <string name="about_author_name_title">Hai Zhang</string>
+    <string name="about_author_name_title">GettoDev</string>
     <string name="about_author_github_title">לעקוב ב-GitHub</string>
     <string name="about_author_twitter_title">לעקוב בטוויטר</string>
 </resources>

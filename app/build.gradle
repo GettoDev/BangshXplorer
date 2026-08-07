@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 2018 Hai Zhang <dreaming.in.code.zh@gmail.com>
+ * Copyright (c) 2026 GettoDev
  * All Rights Reserved.
  */
 
@@ -8,34 +9,20 @@ apply plugin: 'kotlin-parcelize'
 
 apply from: '../signing.gradle'
 
-//#ifdef NONFREE
-buildscript {
-    repositories {
-        google()
-        mavenCentral()
-    }
-    dependencies {
-        classpath 'com.google.gms:google-services:4.4.4'
-        classpath 'com.google.firebase:firebase-crashlytics-gradle:3.0.6'
-    }
-}
-apply plugin: 'com.google.gms.google-services'
-apply plugin: 'com.google.firebase.crashlytics'
-//#endif
 
 android {
-    namespace 'me.zhanghai.android.files'
+    namespace = 'get.gettodev.com'
     buildToolsVersion = '37.0.0'
     compileSdk = 36
-    ndkVersion '28.1.13356709'
+    ndkVersion = '28.1.13356709'
     defaultConfig {
-        applicationId 'me.zhanghai.android.files'
+        applicationId 'get.gettodev.com'
         minSdk 23
         // Not supporting foreground service timeout yet.
         //noinspection OldTargetApi
         targetSdk 34
-        versionCode 39
-        versionName '1.7.4'
+        versionCode 38
+        versionName '1.0.0'
         resValue 'string', 'app_version', versionName + ' (' + versionCode + ')'
         buildConfigField 'String', 'FILE_PROVIDIER_AUTHORITY', 'APPLICATION_ID + ".file_provider"'
         resValue 'string', 'app_provider_authority', applicationId + '.app_provider'
@@ -47,16 +34,16 @@ android {
         }
     }
     buildFeatures {
-        aidl true
-        buildConfig true
-        resValues true
-        viewBinding true
+        aidl = true
+        buildConfig = true
+        resValues = true
+        viewBinding = true
     }
     androidResources {
-        generateLocaleConfig true
+        generateLocaleConfig = true
     }
     compileOptions {
-        coreLibraryDesugaringEnabled true
+        coreLibraryDesugaringEnabled = true
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
@@ -72,20 +59,15 @@ android {
     }
     buildTypes {
         release {
-            minifyEnabled true
-            shrinkResources true
+            minifyEnabled = true
+            shrinkResources = true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-            signingConfig signingConfigs.release
-//#ifdef NONFREE
-            firebaseCrashlytics {
-                nativeSymbolUploadEnabled true
-            }
-//#endif
+            signingConfig = signingConfigs.release
         }
     }
     packagingOptions {
         jniLibs {
-            useLegacyPackaging true
+            useLegacyPackaging = true
         }
         resources {
             excludes += [
@@ -103,12 +85,13 @@ android {
 
 repositories {
     maven {
-        url 'https://jitpack.io'
+        url = 'https://jitpack.io'
     }
 }
 dependencies {
     // We need https://github.com/bitfireAT/dav4jvm/commit/c1bc14348831bcdb00f3a6eec4859b81c7dc3728
-    implementation('com.github.bitfireAT:dav4jvm:02fe1a95e6') {
+    // Full SHA-40 required by JitPack (expanded from short hash 02fe1a95e6)
+    implementation('com.github.bitfireAT:dav4jvm:02fe1a95e6b86e323bec3784d7d2fe2d4081dde6') {
         exclude group: 'org.ogce', module: 'xpp3'
     }
     implementation 'com.github.chrisbanes:PhotoView:2.3.0'
@@ -185,6 +168,7 @@ dependencies {
     implementation 'dev.chrisbanes:insetter-ktx:0.3.1'
     implementation 'dev.rikka.rikkax.preference:simplemenu-preference:1.0.3'
     implementation 'dev.rikka.shizuku:api:13.1.5'
+    implementation 'dev.rikka.shizuku:provider:13.1.5'
     implementation ('eu.agno3.jcifs:jcifs-ng:2.1.10') {
         exclude group: 'org.bouncycastle', module: 'bcprov-jdk18on'
     }
@@ -212,9 +196,4 @@ dependencies {
     // Also a dependency of jCIFS-NG.
     implementation 'org.slf4j:slf4j-android:1.7.36'
 
-//#ifdef NONFREE
-    implementation platform('com.google.firebase:firebase-bom:34.11.0')
-    implementation 'com.google.firebase:firebase-analytics'
-    implementation 'com.google.firebase:firebase-crashlytics-ndk'
-//#endif
 }

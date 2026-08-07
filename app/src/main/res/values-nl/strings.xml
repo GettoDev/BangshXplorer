@@ -7,7 +7,7 @@
 
 <resources>
 
-    <string name="app_name">Material-bestanden</string>
+    <string name="app_name">BangshXplorer</string>
 
     <string name="close">Sluiten</string>
     <string name="copy">Kopiëren</string>
@@ -253,7 +253,8 @@
         <item quantity="one">%1$,d item verwijderen?</item>
         <item quantity="other">%1$,d items verwijderen?</item>
     </plurals>
-    <string name="file_create_archive_title">Archief samenstellen</string>
+    <string name="delete_bnillios">Verwijderen (BNillios)</string>
+    <string name="file_create_archive_title">Archief maken</string>
     <string name="file_create_archive_type_zip">.zip</string>
     <string name="file_create_archive_type_tar_xz">.tar.xz</string>
     <string name="file_create_archive_type_7z">.7z</string>
@@ -670,7 +671,8 @@
     <string name="about_licenses_title">Licenties</string>
     <string name="about_privacy_policy_title">Privacybeleid</string>
     <string name="about_author_title">Maker</string>
-    <string name="about_author_name_title">Hai Zhang</string>
+    <string name="about_author_name_title">GettoDev</string>
     <string name="about_author_github_title">Volgen op GitHub</string>
+    <string name="about_author_website_title">Bezoek de website van GettoDev</string>
     <string name="about_author_twitter_title">Volgen op Twitter</string>
 </resources>

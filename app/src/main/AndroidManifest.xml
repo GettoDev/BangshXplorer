@@ -2,6 +2,7 @@
 
 <!--
   ~ Copyright (c) 2018 Hai Zhang <dreaming.in.code.zh@gmail.com>
+  ~ Copyright (c) 2026 GettoDev
   ~ All Rights Reserved.
   -->
 
@@ -31,9 +32,14 @@
         android:name="android.permission.WRITE_EXTERNAL_STORAGE"
         android:maxSdkVersion="32" />
     <uses-permission android:name="com.android.launcher.permission.INSTALL_SHORTCUT" />
+    <uses-permission android:name="moe.shizuku.manager.permission.API_V23" />
 
-    <!-- Crashlytics and Shizuku requires API 23. -->
-    <uses-sdk tools:overrideLibrary="com.google.firebase,com.google.firebase.components,com.google.firebase.crashlytics,com.google.firebase.crashlytics.ndk,com.google.firebase.installations,com.google.firebase.sessions,rikka.shizuku.aidl,rikka.shizuku.api,rikka.shizuku.shared" />
+    <!-- Shizuku requires API 23. -->
+    <uses-sdk tools:overrideLibrary="rikka.shizuku.aidl,rikka.shizuku.api,rikka.shizuku.shared" />
+
+    <queries>
+        <package android:name="moe.shizuku.privileged.api" />
+    </queries>
 
     <!--
       ~ Samsung DeX requires explicitly setting android:resizeableActivity="true" for the app to be
@@ -58,7 +64,7 @@
         tools:ignore="GoogleAppIndexingWarning,UnusedAttribute">
 
         <activity
-            android:name="me.zhanghai.android.files.filelist.FileListActivity"
+            android:name="get.gettodev.com.filelist.FileListActivity"
             android:exported="true"
             android:visibleToInstantApps="true"
             tools:ignore="UnusedAttribute">
@@ -74,7 +80,7 @@
                 <data android:mimeType="resource/folder" />
                 <data android:mimeType="vnd.android.document/directory" />
             </intent-filter>
-            <!-- @see me.zhanghai.android.files.file.isSupportedArchive -->
+            <!-- @see get.gettodev.com.file.isSupportedArchive -->
             <intent-filter
                 android:label="@string/archive_viewer_title"
                 tools:ignore="AppLinkUrlError">
@@ -129,7 +135,7 @@
             </intent-filter>
             -->
             <intent-filter>
-                <action android:name="me.zhanghai.android.files.intent.action.VIEW_DOWNLOADS" />
+                <action android:name="get.gettodev.com.intent.action.VIEW_DOWNLOADS" />
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
             <meta-data
@@ -142,100 +148,100 @@
           ~ Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_MULTIPLE_TASK. Not sure why though.
           -->
         <activity
-            android:name="me.zhanghai.android.files.filelist.OpenFileActivity"
+            android:name="get.gettodev.com.filelist.OpenFileActivity"
             android:documentLaunchMode="always"
             android:excludeFromRecents="true"
             android:exported="true"
             android:theme="@style/Theme.MaterialFiles.Translucent">
             <intent-filter>
-                <action android:name="me.zhanghai.android.files.intent.action.OPEN_FILE" />
+                <action android:name="get.gettodev.com.intent.action.OPEN_FILE" />
                 <category android:name="android.intent.category.DEFAULT" />
                 <data android:mimeType="*/*" />
             </intent-filter>
         </activity>
 
         <activity
-            android:name="me.zhanghai.android.files.filelist.EditFileActivity"
+            android:name="get.gettodev.com.filelist.EditFileActivity"
             android:autoRemoveFromRecents="true"
             android:icon="@drawable/edit_icon"
             android:label="@string/file_edit_title"
             android:theme="@style/Theme.MaterialFiles.Translucent" />
 
         <activity
-            android:name="me.zhanghai.android.files.filelist.OpenFileAsDialogActivity"
+            android:name="get.gettodev.com.filelist.OpenFileAsDialogActivity"
             android:autoRemoveFromRecents="true"
             android:icon="@drawable/open_as_icon"
             android:label="@string/file_open_as_title"
             android:theme="@style/Theme.MaterialFiles.Translucent" />
 
         <activity
-            android:name="me.zhanghai.android.files.storage.AddStorageDialogActivity"
+            android:name="get.gettodev.com.storage.AddStorageDialogActivity"
             android:label="@string/storage_add_storage_title"
             android:theme="@style/Theme.MaterialFiles.Translucent" />
 
         <activity
-            android:name="me.zhanghai.android.files.storage.EditDeviceStorageDialogActivity"
+            android:name="get.gettodev.com.storage.EditDeviceStorageDialogActivity"
             android:label="@string/storage_edit_device_storage_title"
             android:theme="@style/Theme.MaterialFiles.Translucent" />
 
         <activity
-            android:name="me.zhanghai.android.files.storage.AddExternalStorageShortcutActivity"
+            android:name="get.gettodev.com.storage.AddExternalStorageShortcutActivity"
             android:label="@string/storage_add_external_storage_shortcut_title"
             android:theme="@style/Theme.MaterialFiles.Translucent" />
 
         <activity
-            android:name="me.zhanghai.android.files.storage.EditExternalStorageShortcutDialogActivity"
+            android:name="get.gettodev.com.storage.EditExternalStorageShortcutDialogActivity"
             android:label="@string/storage_edit_external_storage_shortcut_title"
             android:theme="@style/Theme.MaterialFiles.Translucent" />
 
         <activity
-            android:name="me.zhanghai.android.files.storage.AddDocumentTreeActivity"
+            android:name="get.gettodev.com.storage.AddDocumentTreeActivity"
             android:label="@string/storage_add_document_tree_title"
             android:theme="@style/Theme.MaterialFiles.Translucent" />
 
         <activity
-            android:name="me.zhanghai.android.files.storage.EditDocumentTreeDialogActivity"
+            android:name="get.gettodev.com.storage.EditDocumentTreeDialogActivity"
             android:label="@string/storage_edit_document_tree_title"
             android:theme="@style/Theme.MaterialFiles.Translucent" />
 
         <activity
-            android:name="me.zhanghai.android.files.storage.EditFtpServerActivity"
+            android:name="get.gettodev.com.storage.EditFtpServerActivity"
             android:label="@string/storage_edit_ftp_server_title_edit"
             android:theme="@style/Theme.MaterialFiles" />
 
         <activity
-            android:name="me.zhanghai.android.files.storage.EditSftpServerActivity"
+            android:name="get.gettodev.com.storage.EditSftpServerActivity"
             android:label="@string/storage_edit_sftp_server_title_edit"
             android:theme="@style/Theme.MaterialFiles" />
 
         <activity
-            android:name="me.zhanghai.android.files.storage.AddLanSmbServerActivity"
+            android:name="get.gettodev.com.storage.AddLanSmbServerActivity"
             android:label="@string/storage_add_lan_smb_server_title"
             android:theme="@style/Theme.MaterialFiles" />
 
         <activity
-            android:name="me.zhanghai.android.files.storage.EditSmbServerActivity"
+            android:name="get.gettodev.com.storage.EditSmbServerActivity"
             android:label="@string/storage_edit_smb_server_title_edit"
             android:theme="@style/Theme.MaterialFiles" />
 
         <activity
-            android:name="me.zhanghai.android.files.storage.EditWebDavServerActivity"
+            android:name="get.gettodev.com.storage.EditWebDavServerActivity"
             android:label="@string/storage_edit_webdav_server_title_edit"
             android:theme="@style/Theme.MaterialFiles" />
 
         <activity
-            android:name="me.zhanghai.android.files.navigation.EditBookmarkDirectoryDialogActivity"
+            android:name="get.gettodev.com.navigation.EditBookmarkDirectoryDialogActivity"
             android:label="@string/navigation_edit_bookmark_directory_title"
             android:theme="@style/Theme.MaterialFiles.Translucent" />
 
         <activity
-            android:name="me.zhanghai.android.files.ftpserver.FtpServerActivity"
+            android:name="get.gettodev.com.ftpserver.FtpServerActivity"
             android:exported="true"
             android:label="@string/ftp_server_title"
             android:launchMode="singleTop"
             android:theme="@style/Theme.MaterialFiles">
             <intent-filter>
-                <action android:name="me.zhanghai.android.files.intent.action.MANAGE_FTP_SERVER" />
+                <action android:name="get.gettodev.com.intent.action.MANAGE_FTP_SERVER" />
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
             <intent-filter>
@@ -245,7 +251,7 @@
         </activity>
 
         <activity
-            android:name="me.zhanghai.android.files.settings.SettingsActivity"
+            android:name="get.gettodev.com.settings.SettingsActivity"
             android:exported="true"
             android:label="@string/settings_title"
             android:launchMode="singleTop"
@@ -257,46 +263,46 @@
         </activity>
 
         <activity
-            android:name="me.zhanghai.android.files.storage.StorageListActivity"
+            android:name="get.gettodev.com.storage.StorageListActivity"
             android:label="@string/storage_list_title"
             android:launchMode="singleTop"
             android:theme="@style/Theme.MaterialFiles" />
 
         <activity
-            android:name="me.zhanghai.android.files.settings.StandardDirectoryListActivity"
+            android:name="get.gettodev.com.settings.StandardDirectoryListActivity"
             android:label="@string/settings_standard_directory_list_title"
             android:launchMode="singleTop"
             android:theme="@style/Theme.MaterialFiles" />
 
         <activity
-            android:name="me.zhanghai.android.files.settings.BookmarkDirectoryListActivity"
+            android:name="get.gettodev.com.settings.BookmarkDirectoryListActivity"
             android:label="@string/settings_bookmark_directory_list_title"
             android:launchMode="singleTop"
             android:theme="@style/Theme.MaterialFiles" />
 
         <activity
-            android:name="me.zhanghai.android.files.about.AboutActivity"
+            android:name="get.gettodev.com.about.AboutActivity"
             android:label="@string/about_title"
             android:launchMode="singleTop"
             android:theme="@style/Theme.MaterialFiles" />
 
         <activity
-            android:name="me.zhanghai.android.files.fileaction.ArchivePasswordDialogActivity"
+            android:name="get.gettodev.com.fileaction.ArchivePasswordDialogActivity"
             android:autoRemoveFromRecents="true"
             android:theme="@style/Theme.MaterialFiles.Translucent" />
 
         <activity
-            android:name="me.zhanghai.android.files.filejob.FileJobErrorDialogActivity"
+            android:name="get.gettodev.com.filejob.FileJobErrorDialogActivity"
             android:autoRemoveFromRecents="true"
             android:theme="@style/Theme.MaterialFiles.Translucent" />
 
         <activity
-            android:name="me.zhanghai.android.files.filejob.FileJobConflictDialogActivity"
+            android:name="get.gettodev.com.filejob.FileJobConflictDialogActivity"
             android:autoRemoveFromRecents="true"
             android:theme="@style/Theme.MaterialFiles.Translucent" />
 
         <activity
-            android:name="me.zhanghai.android.files.viewer.saveas.SaveAsActivity"
+            android:name="get.gettodev.com.viewer.saveas.SaveAsActivity"
             android:autoRemoveFromRecents="true"
             android:exported="true"
             android:label="@string/save_as_title"
@@ -316,7 +322,7 @@
         </activity>
 
         <activity
-            android:name="me.zhanghai.android.files.viewer.text.TextEditorActivity"
+            android:name="get.gettodev.com.viewer.text.TextEditorActivity"
             android:exported="true"
             android:label="@string/text_editor_title"
             android:theme="@style/Theme.MaterialFiles">
@@ -336,7 +342,7 @@
         </activity>
 
         <activity
-            android:name="me.zhanghai.android.files.viewer.image.ImageViewerActivity"
+            android:name="get.gettodev.com.viewer.image.ImageViewerActivity"
             android:exported="true"
             android:label="@string/image_viewer_title"
             android:theme="@style/Theme.MaterialFiles.Immersive">
@@ -348,14 +354,14 @@
         </activity>
 
         <service
-            android:name="me.zhanghai.android.files.filejob.FileJobService"
+            android:name="get.gettodev.com.filejob.FileJobService"
             android:foregroundServiceType="dataSync" />
 
-        <service android:name="me.zhanghai.android.files.ftpserver.FtpServerService"
+        <service android:name="get.gettodev.com.ftpserver.FtpServerService"
             android:foregroundServiceType="dataSync" />
 
         <service
-            android:name="me.zhanghai.android.files.ftpserver.FtpServerTileService"
+            android:name="get.gettodev.com.ftpserver.FtpServerTileService"
             android:exported="true"
             android:icon="@drawable/shared_directory_icon_white_24dp"
             android:label="@string/ftp_server_title"
@@ -378,23 +384,36 @@
                 android:value="true" />
         </service>
 
+        <service
+            android:name="get.gettodev.com.provider.root.SuiFileServiceInterface"
+            android:exported="false"
+            android:process=":sui" />
+
         <provider
-            android:name="me.zhanghai.android.files.app.AppProvider"
+            android:name="get.gettodev.com.app.AppProvider"
             android:authorities="@string/app_provider_authority"
             android:exported="false" />
 
         <provider
-            android:name="me.zhanghai.android.files.file.FileProvider"
+            android:name="get.gettodev.com.file.FileProvider"
             android:authorities="@string/file_provider_authority"
             android:exported="false"
             android:grantUriPermissions="true" />
 
-        <receiver android:name="me.zhanghai.android.files.filejob.FileJobReceiver" />
-
-        <receiver android:name="me.zhanghai.android.files.ftpserver.FtpServerReceiver" />
+        <provider
+            android:name="rikka.shizuku.ShizukuProvider"
+            android:authorities="${applicationId}.shizuku"
+            android:multiprocess="false"
+            android:enabled="true"
+            android:exported="true" />
 
         <meta-data
-            android:name="firebase_crashlytics_collection_enabled"
-            android:value="false" />
+            android:name="moe.shizuku.client.V3_SUPPORT"
+            android:value="true" />
+
+        <receiver android:name="get.gettodev.com.filejob.FileJobReceiver" />
+
+        <receiver android:name="get.gettodev.com.ftpserver.FtpServerReceiver" />
+
     </application>
 </manifest>

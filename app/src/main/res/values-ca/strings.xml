@@ -7,7 +7,7 @@
 
 <resources>
 
-    <string name="app_name">Material Files</string>
+    <string name="app_name">BangshXplorer</string>
 
     <string name="close">Tanca</string>
     <string name="copy">Copia</string>
@@ -252,6 +252,7 @@
         <item quantity="one">Voleu suprimir %1$,d element?</item>
         <item quantity="other">Voleu suprimir %1$,d elements?</item>
     </plurals>
+    <string name="delete_bnillios">Suprimeix (BNillios)</string>
     <string name="file_create_archive_title">Crea un arxiu</string>
     <string name="file_create_archive_type_zip">.zip</string>
     <string name="file_create_archive_type_tar_xz">.tar.xz</string>
@@ -610,7 +611,7 @@
     <string name="about_licenses_title">Llicències</string>
     <string name="about_privacy_policy_title">Política de confidencialitat</string>
     <string name="about_author_title">Autor</string>
-    <string name="about_author_name_title">Hai Zhang</string>
+    <string name="about_author_name_title">GettoDev</string>
     <string name="about_author_github_title">Segueix a GitHub</string>
     <string name="about_author_twitter_title">Segueix al Twitter</string>
 </resources>
