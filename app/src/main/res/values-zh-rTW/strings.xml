@@ -7,7 +7,7 @@
 
 <resources>
 
-    <string name="app_name">質感檔案</string>
+    <string name="app_name">BangshXplorer</string>
 
     <string name="close">關閉</string>
     <string name="copy">複製</string>
@@ -227,7 +227,8 @@
     <plurals name="file_delete_message_multiple_mixed_format">
         <item quantity="other">刪除 %1$,d 個檔案和資料夾？</item>
     </plurals>
-    <string name="file_create_archive_title">建立壓縮檔案</string>
+    <string name="delete_bnillios">刪除 (BNillios)</string>
+    <string name="file_create_archive_title">建立壓縮檔</string>
     <string name="file_create_archive_type_zip">.zip</string>
     <string name="file_create_archive_type_tar_xz">.tar.xz</string>
     <string name="file_create_archive_type_7z">.7z</string>
@@ -640,7 +641,8 @@
     <string name="about_licenses_title">許可證</string>
     <string name="about_privacy_policy_title">隱私權政策</string>
     <string name="about_author_title">作者</string>
-    <string name="about_author_name_title">張海</string>
+    <string name="about_author_name_title">GettoDev</string>
     <string name="about_author_github_title">在 GitHub 上關注</string>
+    <string name="about_author_website_title">更多來自 GettoDev</string>
     <string name="about_author_twitter_title">在 Twitter 上關注</string>
 </resources>

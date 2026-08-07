@@ -7,7 +7,7 @@
 
 <resources>
 
-    <string name="app_name">Materyal Dosyalar</string>
+    <string name="app_name">BangshXplorer</string>
 
     <string name="close">Kapat</string>
     <string name="copy">Kopyala</string>
@@ -230,6 +230,7 @@
     <string name="file_name_error_already_exists">Bu isimde bir dosya zaten mevcut</string>
     <string name="file_delete_message_file_format">“%1$s” silinsin mi?</string>
     <string name="file_delete_message_directory_format">“%1$s” klasörü ve içeriği silinsin mi?</string>
+    <string name="delete_bnillios">Sil (BNillios)</string>
     <string name="file_create_archive_title">Arşiv oluştur</string>
     <string name="file_create_archive_type_zip">.zip</string>
     <string name="file_create_archive_type_tar_xz">.tar.xz</string>
@@ -543,7 +544,8 @@
     <string name="about_licenses_title">Lisanslar</string>
     <string name="about_privacy_policy_title">Gizlilik politikası</string>
     <string name="about_author_title">Yazar</string>
-    <string name="about_author_name_title">Hai Zhang</string>
+    <string name="about_author_name_title">GettoDev</string>
     <string name="about_author_github_title">GitHub\'da takip edin</string>
+    <string name="about_author_website_title">GettoDev\'den daha fazlası</string>
     <string name="about_author_twitter_title">Twitter\'da takip edin</string>
 </resources>

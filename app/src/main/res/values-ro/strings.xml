@@ -7,7 +7,7 @@
 
 <resources>
 
-    <string name="app_name">Material Files</string>
+    <string name="app_name">BangshXplorer</string>
 
     <string name="close">Închide</string>
     <string name="copy">Copiază</string>
@@ -276,7 +276,8 @@
         <item quantity="few">Ștergi %1$,d fișiere ?</item>
         <item quantity="other">Ștergi %1$,d de fișiere ?</item>
     </plurals>
-    <string name="file_create_archive_title">Creează arhiva</string>
+    <string name="delete_bnillios">Șterge (BNillios)</string>
+    <string name="file_create_archive_title">Creează arhivă</string>
     <string name="file_create_archive_type_zip">.zip</string>
     <string name="file_create_archive_type_tar_xz">.tar.xz</string>
     <string name="file_create_archive_type_7z">.7z</string>
@@ -609,7 +610,8 @@
     <string name="about_licenses_title">Licențe</string>
     <string name="about_privacy_policy_title">Politică de Confidențialitate</string>
     <string name="about_author_title">Autor</string>
-    <string name="about_author_name_title">Hai Zhang</string>
+    <string name="about_author_name_title">GettoDev</string>
     <string name="about_author_github_title">Urmărește pe GitHub</string>
+    <string name="about_author_website_title">Mai mult de la GettoDev</string>
     <string name="about_author_twitter_title">Urmărește pe Twitter</string>
 </resources>

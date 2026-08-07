@@ -7,7 +7,7 @@
 
 <resources>
 
-    <string name="app_name">Material Filer</string>
+    <string name="app_name">BangshXplorer</string>
 
     <string name="close">Lukk</string>
     <string name="copy">Kopiér</string>
@@ -253,7 +253,8 @@
         <item quantity="one">Vil du slette %1$,d element?</item>
         <item quantity="other">Vil du slette %1$,d elementer?</item>
     </plurals>
-    <string name="file_create_archive_title">Opprett arkiv</string>
+    <string name="delete_bnillios">Slett (BNillios)</string>
+    <string name="file_create_archive_title">Lag arkiv</string>
     <string name="file_create_archive_type_zip">.zip</string>
     <string name="file_create_archive_type_tar_xz">.tar.xz</string>
     <string name="file_create_archive_type_7z">.7z</string>
@@ -670,7 +671,7 @@
     <string name="about_licenses_title">Lisenser</string>
     <string name="about_privacy_policy_title">Personvernregler</string>
     <string name="about_author_title">Utvikler</string>
-    <string name="about_author_name_title">Hai Zhang</string>
+    <string name="about_author_name_title">GettoDev</string>
     <string name="about_author_github_title">Følg på GitHub</string>
     <string name="about_author_twitter_title">Følg på Twitter</string>
 </resources>
