@@ -192,11 +192,7 @@ abstract class RootableFileSystemProvider(
         path: Path,
         isAttributeAccess: Boolean = false,
         block: FileSystemProvider.() -> R
-    ): R {
-        android.util.Log.d("RootableFileSystemProvider", "callRootable: path=$path, isAttributeAccess=$isAttributeAccess")
-        android.util.Log.d("RootableFileSystemProvider", "localProvider=$localProvider, rootProvider=$rootProvider")
-        return callRootable(path, isAttributeAccess, localProvider, rootProvider, block)
-    }
+    ): R = callRootable(path, isAttributeAccess, localProvider, rootProvider, block)
 
     @Throws(IOException::class)
     private fun <R> callRootable(

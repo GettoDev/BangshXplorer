@@ -5,7 +5,6 @@
 
 package get.gettodev.com.provider.root
 
-import android.os.Build
 import java8.nio.file.Path
 import get.gettodev.com.settings.Settings
 import get.gettodev.com.util.valueCompat
@@ -16,26 +15,7 @@ interface RootablePath {
 }
 
 private val rootStrategy: RootStrategy
-    get() {
-        // Inside server process (:sui), ALWAYS use local provider directly
-        if (isServerProcess) return RootStrategy.NEVER
-
-        // Force ALWAYS strategy when Shizuku is available
-        // This bypasses Android 11+ restrictions for Android/data
-        if (isRunningAsRoot) return RootStrategy.ALWAYS
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            try {
-                val version = rikka.shizuku.Shizuku.getVersion()
-                if (version >= 0) {
-                    android.util.Log.d("RootablePath", "Shizuku detected (version=$version), forcing ALWAYS strategy")
-                    return RootStrategy.ALWAYS
-                }
-            } catch (e: Exception) {
-                android.util.Log.d("RootablePath", "Shizuku not available: ${e.message}")
-            }
-        }
-        return Settings.ROOT_STRATEGY.valueCompat
-    }
+    get() = if (isRunningAsRoot) RootStrategy.NEVER else Settings.ROOT_STRATEGY.valueCompat
 
 @Throws(IOException::class)
 fun <T, R> callRootable(

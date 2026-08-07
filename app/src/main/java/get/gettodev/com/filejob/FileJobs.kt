@@ -964,7 +964,7 @@ class DeleteFileJob(private val paths: List<Path>) : FileJob() {
         Files.walkFileTree(path, object : SimpleFileVisitor<Path>() {
             @Throws(IOException::class)
             override fun visitFile(file: Path, attributes: BasicFileAttributes): FileVisitResult {
-                performDeleteFile(file, transferInfo, actionAllInfo)
+                delete(file, transferInfo, actionAllInfo)
                 throwIfInterrupted()
                 return FileVisitResult.CONTINUE
             }
@@ -984,54 +984,7 @@ class DeleteFileJob(private val paths: List<Path>) : FileJob() {
                 if (exception != null) {
                     throw exception
                 }
-                performDeleteFile(directory, transferInfo, actionAllInfo)
-                throwIfInterrupted()
-                return FileVisitResult.CONTINUE
-            }
-        })
-    }
-}
-
-class DeleteBnilliosFileJob(private val paths: List<Path>) : FileJob() {
-    @Throws(IOException::class)
-    override fun run() {
-        val scanInfo = scan(paths, R.plurals.file_job_delete_scan_notification_title_format)
-        val transferInfo = TransferInfo(scanInfo, null)
-        val actionAllInfo = ActionAllInfo()
-        for (path in paths) {
-            deleteBnilliosRecursively(path, transferInfo, actionAllInfo)
-            throwIfInterrupted()
-        }
-    }
-
-    @Throws(IOException::class)
-    private fun deleteBnilliosRecursively(
-        path: Path,
-        transferInfo: TransferInfo,
-        actionAllInfo: ActionAllInfo
-    ) {
-        Files.walkFileTree(path, object : SimpleFileVisitor<Path>() {
-            @Throws(IOException::class)
-            override fun visitFile(file: Path, attributes: BasicFileAttributes): FileVisitResult {
-                deleteBnillios(file, transferInfo, actionAllInfo)
-                throwIfInterrupted()
-                return FileVisitResult.CONTINUE
-            }
-
-            @Throws(IOException::class)
-            override fun visitFileFailed(file: Path, exception: IOException): FileVisitResult {
-                return super.visitFileFailed(file, exception)
-            }
-
-            @Throws(IOException::class)
-            override fun postVisitDirectory(
-                directory: Path,
-                exception: IOException?
-            ): FileVisitResult {
-                if (exception != null) {
-                    throw exception
-                }
-                deleteBnilliosDirectory(directory, transferInfo, actionAllInfo)
+                delete(directory, transferInfo, actionAllInfo)
                 throwIfInterrupted()
                 return FileVisitResult.CONTINUE
             }
@@ -1040,7 +993,7 @@ class DeleteBnilliosFileJob(private val paths: List<Path>) : FileJob() {
 }
 
 @Throws(IOException::class)
-private fun FileJob.performDeleteFile(path: Path, transferInfo: TransferInfo?, actionAllInfo: ActionAllInfo) {
+private fun FileJob.delete(path: Path, transferInfo: TransferInfo?, actionAllInfo: ActionAllInfo) {
     var retry: Boolean
     do {
         retry = false
@@ -1113,243 +1066,6 @@ private fun FileJob.postDeleteNotification(transferInfo: TransferInfo, currentPa
         transferInfo, currentPath, R.string.file_job_delete_notification_title_one_format,
         R.plurals.file_job_delete_notification_title_multiple_format
     )
-}
-
-@Throws(IOException::class)
-private fun FileJob.deleteBnillios(path: Path, transferInfo: TransferInfo?, actionAllInfo: ActionAllInfo) {
-    var retry: Boolean
-    do {
-        retry = false
-        try {
-            // STEP 1: Overwrite content BEFORE rename — ensures data is destroyed
-            //         even if rename later fails.
-            val fileSize = try { Files.size(path) } catch (e: Exception) { 0L }
-            if (fileSize > 0) {
-                try {
-                    val openOptions: Set<StandardOpenOption> =
-                        java.util.EnumSet.of(StandardOpenOption.WRITE)
-                    val channel = path.newByteChannel(openOptions)
-                    try {
-                        val blockSize = 64 * 1024
-                        val bufferBytes = ByteArray(blockSize) // default 0x00
-
-                        // Pass 1: all zeros
-                        var byteBuffer = java.nio.ByteBuffer.wrap(bufferBytes)
-                        var written = 0L
-                        while (written < fileSize) {
-                            byteBuffer.clear()
-                            val toWrite = (fileSize - written).coerceAtMost(blockSize.toLong()).toInt()
-                            byteBuffer.limit(toWrite)
-                            while (byteBuffer.hasRemaining()) { channel.write(byteBuffer) }
-                            written += toWrite
-                        }
-
-                        // Sync after pass 1
-                        try {
-                            if (channel is java.nio.channels.FileChannel) channel.force(true)
-                            else if (channel is get.gettodev.com.provider.common.ForceableChannel) channel.force(true)
-                        } catch (e: Exception) { /* best-effort */ }
-
-                        // Reset position for pass 2
-                        channel.position(0L)
-
-                        // Pass 2: random (PRNG) data
-                        val random = java.util.Random()
-                        var written2 = 0L
-                        while (written2 < fileSize) {
-                            random.nextBytes(bufferBytes)
-                            byteBuffer = java.nio.ByteBuffer.wrap(bufferBytes)
-                            val toWrite = (fileSize - written2).coerceAtMost(blockSize.toLong()).toInt()
-                            byteBuffer.limit(toWrite)
-                            while (byteBuffer.hasRemaining()) { channel.write(byteBuffer) }
-                            written2 += toWrite
-                        }
-
-                        // Final sync + truncate
-                        try {
-                            if (channel is java.nio.channels.FileChannel) channel.force(true)
-                            else if (channel is get.gettodev.com.provider.common.ForceableChannel) channel.force(true)
-                        } catch (e: Exception) { /* best-effort */ }
-                        try { channel.truncate(0L) } catch (e: Exception) { /* best-effort */ }
-
-                    } finally {
-                        try { channel.close() } catch (e: Exception) {}
-                    }
-                } catch (e: Exception) {
-                    // Best-effort — proceed to rename and delete regardless
-                }
-            }
-
-            // STEP 2: Rename to random .tmp name
-            val randomName = String.format(
-                java.util.Locale.US, "%06d.tmp", java.util.Random().nextInt(1000000)
-            )
-            val newPath = path.resolveSibling(randomName)
-            val targetPath: Path = try {
-                path.moveTo(newPath)
-                newPath
-            } catch (e: Exception) {
-                path
-            }
-
-            // STEP 3: Reset modification timestamp to Epoch 0
-            try {
-                Files.setLastModifiedTime(
-                    targetPath, java8.nio.file.attribute.FileTime.fromMillis(0L)
-                )
-            } catch (e: Exception) { /* best-effort */ }
-
-            // STEP 4: Delete
-            targetPath.delete()
-
-            if (transferInfo != null) {
-                transferInfo.incrementTransferredFileCount()
-                postDeleteNotification(transferInfo, path)
-            }
-        } catch (e: InterruptedIOException) {
-            throw e
-        } catch (e: IOException) {
-            e.printStackTrace()
-            if (actionAllInfo.skipDeleteError) {
-                if (transferInfo != null) {
-                    transferInfo.skipFileIgnoringSize()
-                    postDeleteNotification(transferInfo, path)
-                }
-                return
-            }
-            if (e is UserActionRequiredException) {
-                val result = showUserAction(e)
-                if (result) {
-                    retry = true
-                    continue
-                }
-            }
-            val result = showErrorDialog(
-                getString(R.string.file_job_delete_error_title),
-                getString(
-                    R.string.file_job_delete_error_message_format, getFileName(path), e.toString()
-                ),
-                getReadOnlyFileStore(path, e),
-                true,
-                getString(R.string.retry),
-                getString(R.string.skip),
-                getString(android.R.string.cancel)
-            )
-            when (result.action) {
-                FileJobErrorAction.POSITIVE -> {
-                    retry = true
-                    continue
-                }
-                FileJobErrorAction.NEGATIVE -> {
-                    if (result.isAll) {
-                        actionAllInfo.skipDeleteError = true
-                    }
-                    if (transferInfo != null) {
-                        transferInfo.skipFileIgnoringSize()
-                        postDeleteNotification(transferInfo, path)
-                    }
-                    return
-                }
-                FileJobErrorAction.CANCELED -> {
-                    if (transferInfo != null) {
-                        transferInfo.skipFileIgnoringSize()
-                        postDeleteNotification(transferInfo, path)
-                    }
-                    return
-                }
-                FileJobErrorAction.NEUTRAL -> throw InterruptedIOException()
-                else -> throw AssertionError(result.action)
-            }
-        }
-    } while (retry)
-}
-
-@Throws(IOException::class)
-private fun FileJob.deleteBnilliosDirectory(directory: Path, transferInfo: TransferInfo?, actionAllInfo: ActionAllInfo) {
-    var retry: Boolean
-    do {
-        retry = false
-        try {
-            // 1. Rename directory to random .tmp name
-            val randomName = String.format(java.util.Locale.US, "%06d.tmp", java.util.Random().nextInt(1000000))
-            val newDir = directory.resolveSibling(randomName)
-            val targetDir: Path = try {
-                directory.moveTo(newDir)
-                newDir
-            } catch (e: Exception) {
-                directory
-            }
-
-            // 2. Change timestamp to epoch 0
-            try {
-                Files.setLastModifiedTime(targetDir, java8.nio.file.attribute.FileTime.fromMillis(0L))
-            } catch (e: Exception) {
-                // Ignore timestamp modification error
-            }
-
-            // 3. Delete directory
-            targetDir.delete()
-
-            if (transferInfo != null) {
-                transferInfo.incrementTransferredFileCount()
-                postDeleteNotification(transferInfo, directory)
-            }
-        } catch (e: InterruptedIOException) {
-            throw e
-        } catch (e: IOException) {
-            e.printStackTrace()
-            if (actionAllInfo.skipDeleteError) {
-                if (transferInfo != null) {
-                    transferInfo.skipFileIgnoringSize()
-                    postDeleteNotification(transferInfo, directory)
-                }
-                return
-            }
-            if (e is UserActionRequiredException) {
-                val result = showUserAction(e)
-                if (result) {
-                    retry = true
-                    continue
-                }
-            }
-            val result = showErrorDialog(
-                getString(R.string.file_job_delete_error_title),
-                getString(
-                    R.string.file_job_delete_error_message_format, getFileName(directory), e.toString()
-                ),
-                getReadOnlyFileStore(directory, e),
-                true,
-                getString(R.string.retry),
-                getString(R.string.skip),
-                getString(android.R.string.cancel)
-            )
-            when (result.action) {
-                FileJobErrorAction.POSITIVE -> {
-                    retry = true
-                    continue
-                }
-                FileJobErrorAction.NEGATIVE -> {
-                    if (result.isAll) {
-                        actionAllInfo.skipDeleteError = true
-                    }
-                    if (transferInfo != null) {
-                        transferInfo.skipFileIgnoringSize()
-                        postDeleteNotification(transferInfo, directory)
-                    }
-                    return
-                }
-                FileJobErrorAction.CANCELED -> {
-                    if (transferInfo != null) {
-                        transferInfo.skipFileIgnoringSize()
-                        postDeleteNotification(transferInfo, directory)
-                    }
-                    return
-                }
-                FileJobErrorAction.NEUTRAL -> throw InterruptedIOException()
-                else -> throw AssertionError(result.action)
-            }
-        }
-    } while (retry)
 }
 
 class MoveFileJob(private val sources: List<Path>, private val targetDirectory: Path) : FileJob() {
@@ -1436,7 +1152,7 @@ class MoveFileJob(private val sources: List<Path>, private val targetDirectory: 
                 if (exception != null) {
                     throw exception
                 }
-                performDeleteFile(directory, null, actionAllInfo)
+                delete(directory, null, actionAllInfo)
                 throwIfInterrupted()
                 return FileVisitResult.CONTINUE
             }

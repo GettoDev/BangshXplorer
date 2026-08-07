@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2026 GettoDev
+ * Copyright (c) 2020 Hai Zhang <dreaming.in.code.zh@gmail.com>
  * All Rights Reserved.
  */
 
@@ -34,19 +34,12 @@ val appInitializers = listOf(
     ::initializeWebViewDebugging,
     ::initializeCoil,
     ::initializeFileSystemProviders,
-    ::initializeShizuku,
     ::upgradeApp,
     ::initializeLiveDataObjects,
     ::initializeCustomTheme,
     ::initializeNightMode,
     ::createNotificationChannels
 )
-
-private fun initializeShizuku() {
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-        get.gettodev.com.provider.root.SuiFileServiceLauncher.ensureInitialized()
-    }
-}
 
 private fun disableHiddenApiChecks() {
     HiddenApi.disableHiddenApiChecks()
