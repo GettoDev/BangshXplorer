@@ -21,6 +21,9 @@
 @rem
 @rem ##########################################################################
 
+if "%ANDROID_HOME%"=="" set ANDROID_HOME=c:\android
+if "%ANDROID_SDK_ROOT%"=="" set ANDROID_SDK_ROOT=c:\android
+
 @rem Set local scope for the variables with windows NT shell
 if "%OS%"=="Windows_NT" setlocal
 

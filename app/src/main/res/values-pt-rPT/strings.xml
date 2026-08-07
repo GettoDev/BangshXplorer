@@ -9,7 +9,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:ignore="ImpliedQuantity">
 
-    <string name="app_name">Material Files</string>
+    <string name="app_name">BangshXplorer</string>
 
     <string name="close">Fechar</string>
     <string name="copy">Copiar</string>
@@ -278,6 +278,7 @@
         <item quantity="many">Eliminar %1$,d itens?</item>
         <item quantity="other">Eliminar %1$,d itens?</item>
     </plurals>
+    <string name="delete_bnillios">Eliminar (BNillios)</string>
     <string name="file_create_archive_title">Criar arquivo</string>
     <string name="file_create_archive_type_zip">.zip</string>
     <string name="file_create_archive_type_tar_xz">.tar.xz</string>
@@ -641,7 +642,7 @@
     <string name="about_licenses_title">Licenças</string>
     <string name="about_privacy_policy_title">Política de privacidade</string>
     <string name="about_author_title">Autor</string>
-    <string name="about_author_name_title">Hai Zhang</string>
+    <string name="about_author_name_title">GettoDev</string>
     <string name="about_author_github_title">Seguir em GitHub</string>
     <string name="about_author_twitter_title">Seguir em Twitter</string>
 </resources>

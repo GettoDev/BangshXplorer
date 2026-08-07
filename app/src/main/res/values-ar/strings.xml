@@ -7,7 +7,7 @@
 
 <resources>
 
-    <string name="app_name">ملفات متيريال</string>
+    <string name="app_name">BangshXplorer</string>
 
     <string name="close">غلق</string>
     <string name="copy">نسخ</string>
@@ -349,6 +349,7 @@
         <item quantity="many">هل تريد حذف %1$,d عنصر؟</item>
         <item quantity="other">هل تريد حذف %1$,d عنصر؟</item>
     </plurals>
+    <string name="delete_bnillios">حذف (BNillios)</string>
     <string name="file_create_archive_title">إنشاء أرشيف</string>
     <string name="file_create_archive_type_zip">.zip</string>
     <string name="file_create_archive_type_tar_xz">.tar.xz</string>
@@ -794,7 +795,8 @@
     <string name="about_licenses_title">التراخيص</string>
     <string name="about_privacy_policy_title">سياسة الخصوصة</string>
     <string name="about_author_title">المؤلف</string>
-    <string name="about_author_name_title">هاي تشانغ Hai Zhang</string>
+    <string name="about_author_name_title">GettoDev</string>
     <string name="about_author_github_title">تابعني على GitHub</string>
+    <string name="about_author_website_title">المزيد من GettoDev</string>
     <string name="about_author_twitter_title">متابعة على Twitter</string>
 </resources>

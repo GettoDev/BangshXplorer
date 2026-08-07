@@ -7,7 +7,7 @@
 
 <resources>
 
-    <string name="app_name">Material Files</string>
+    <string name="app_name">BangshXplorer</string>
 
     <string name="close">Đóng</string>
     <string name="copy">Sao chép</string>
@@ -219,7 +219,8 @@
     <plurals name="file_delete_message_multiple_mixed_format">
         <item quantity="other">Xoá %1$,d mục?</item>
     </plurals>
-    <string name="file_create_archive_title">Tạo tệp nén</string>
+    <string name="delete_bnillios">Xóa (BNillios)</string>
+    <string name="file_create_archive_title">Tạo kho lưu trữ</string>
     <string name="file_create_archive_type_zip">.zip</string>
     <string name="file_create_archive_type_tar_xz">.tar.xz</string>
     <string name="file_create_archive_type_7z">.7z</string>
@@ -533,7 +534,8 @@
     <string name="about_licenses_title">Giấy phép</string>
     <string name="about_privacy_policy_title">Chính sách riêng tư</string>
     <string name="about_author_title">Tác giả</string>
-    <string name="about_author_name_title">Hai Zhang</string>
+    <string name="about_author_name_title">GettoDev</string>
     <string name="about_author_github_title">Theo dõi trên GitHub</string>
+    <string name="about_author_website_title">Thêm từ GettoDev</string>
     <string name="about_author_twitter_title">Theo dõi trên Twitter</string>
 </resources>

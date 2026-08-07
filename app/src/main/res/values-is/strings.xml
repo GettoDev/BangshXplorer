@@ -9,7 +9,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:ignore="ImpliedQuantity">
 
-    <string name="app_name">Material-skrár</string>
+    <string name="app_name">BangshXplorer</string>
 
     <string name="close">Loka</string>
     <string name="copy">Afrita</string>
@@ -255,7 +255,8 @@
         <item quantity="one">Eyða %1$,d atriði?</item>
         <item quantity="other">Eyða %1$,d atriðum?</item>
     </plurals>
-    <string name="file_create_archive_title">Útbúa safnskrá</string>
+    <string name="delete_bnillios">Eyða (BNillios)</string>
+    <string name="file_create_archive_title">Búa til safnskrá</string>
     <string name="file_create_archive_type_zip">.zip</string>
     <string name="file_create_archive_type_tar_xz">.tar.xz</string>
     <string name="file_create_archive_type_7z">.7z</string>
@@ -672,7 +673,7 @@
     <string name="about_licenses_title">Notkunarleyfi</string>
     <string name="about_privacy_policy_title">Persónuverndarstefna</string>
     <string name="about_author_title">Höfundur</string>
-    <string name="about_author_name_title">Hai Zhang</string>
+    <string name="about_author_name_title">GettoDev</string>
     <string name="about_author_github_title">Fylgjast með á GitHub</string>
     <string name="about_author_twitter_title">Fylgjast með á Twitter</string>
 </resources>
