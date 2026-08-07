@@ -135,10 +135,6 @@ class FileJobService : Service() {
             startJob(DeleteFileJob(paths), context)
         }
 
-        fun deleteBnillios(paths: List<Path>, context: Context) {
-            startJob(DeleteBnilliosFileJob(paths), context)
-        }
-
         fun move(sources: List<Path>, targetDirectory: Path, context: Context) {
             startJob(MoveFileJob(sources, targetDirectory), context)
         }

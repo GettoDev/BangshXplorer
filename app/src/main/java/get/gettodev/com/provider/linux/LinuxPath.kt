@@ -20,7 +20,6 @@ import get.gettodev.com.compat.pathFileCompat
 import get.gettodev.com.provider.common.ByteString
 import get.gettodev.com.provider.common.ByteStringListPath
 import get.gettodev.com.provider.root.RootablePath
-import get.gettodev.com.provider.root.isRunningAsRoot
 import get.gettodev.com.storage.StorageVolumeListLiveData
 import get.gettodev.com.util.readParcelable
 import get.gettodev.com.util.valueCompat
@@ -79,35 +78,8 @@ internal class LinuxPath : ByteStringListPath<LinuxPath>, RootablePath {
     }
 
     override fun isRootRequired(isAttributeAccess: Boolean): Boolean {
-        if (get.gettodev.com.provider.root.isServerProcess) {
-            return false
-        }
         val file = toFile()
-        android.util.Log.d("LinuxPath", "isRootRequired: file=$file, isAttributeAccess=$isAttributeAccess")
-        android.util.Log.d("LinuxPath", "isRunningAsRoot=$isRunningAsRoot, isShizukuAvailable=${isShizukuAvailable()}")
-        
-        // When running as root (Shizuku) or Shizuku is available, always require root for Android/data and Android/obb
-        // to bypass Android 11+ restrictions
-        if (isRunningAsRoot || isShizukuAvailable()) {
-            val parentDirectory = file.parentFile
-            val isInAndroidData = if (isAttributeAccess && parentDirectory != null) {
-                parentDirectory.name == "data" && parentDirectory.parentFile?.name == "Android"
-            } else {
-                file.name == "data" && file.parentFile?.name == "Android"
-            }
-            val isInAndroidObb = if (isAttributeAccess && parentDirectory != null) {
-                parentDirectory.name == "obb" && parentDirectory.parentFile?.name == "Android"
-            } else {
-                file.name == "obb" && file.parentFile?.name == "Android"
-            }
-            android.util.Log.d("LinuxPath", "isInAndroidData=$isInAndroidData, isInAndroidObb=$isInAndroidObb")
-            if (isInAndroidData || isInAndroidObb) {
-                android.util.Log.d("LinuxPath", "Returning true (root required)")
-                return true
-            }
-        }
-        
-        val result = StorageVolumeListLiveData.valueCompat.none {
+        return StorageVolumeListLiveData.valueCompat.none {
             if (Build.VERSION.SDK_INT < Build.VERSION_CODES.R && !it.isPrimaryCompat) {
                 return@none false
             }
@@ -117,29 +89,12 @@ internal class LinuxPath : ByteStringListPath<LinuxPath>, RootablePath {
             }
             return@none file.isAccessibleInStorageVolume(storageVolumeDirectory, isAttributeAccess)
         }
-        android.util.Log.d("LinuxPath", "Returning $result (from storage check)")
-        return result
-    }
-
-    private fun isShizukuAvailable(): Boolean {
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) return false
-        return try {
-            // Try to check Shizuku availability without triggering initialization
-            val version = rikka.shizuku.Shizuku.getVersion()
-            version >= 0
-        } catch (e: Exception) {
-            false
-        }
     }
 
     private fun File.isAccessibleInStorageVolume(
         storageVolumeDirectory: File,
         isAttributeAccess: Boolean
     ): Boolean {
-        // When running as root (Shizuku) or inside server process, bypass Android 11+ restrictions
-        if (isRunningAsRoot || get.gettodev.com.provider.root.isServerProcess) {
-            return true
-        }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
             val parentDirectory = parentFile
             val androidDataDirectory = storageVolumeDirectory.resolve(FILE_ANDROID_DATA)
