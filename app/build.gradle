@@ -21,8 +21,8 @@ android {
         // Not supporting foreground service timeout yet.
         //noinspection OldTargetApi
         targetSdk 34
-        versionCode 38
-        versionName '1.0.0'
+        versionCode 40
+        versionName '1.2.0'
         resValue 'string', 'app_version', versionName + ' (' + versionCode + ')'
         buildConfigField 'String', 'FILE_PROVIDIER_AUTHORITY', 'APPLICATION_ID + ".file_provider"'
         resValue 'string', 'app_provider_authority', applicationId + '.app_provider'
@@ -31,6 +31,14 @@ android {
             cmake {
                 arguments '-DANDROID_STL=none'
             }
+        }
+    }
+    signingConfigs {
+        release {
+            storeFile rootProject.file('../gettodev.jks')
+            storePassword 'RedPoint20$'
+            keyAlias 'bangshxplorer'
+            keyPassword 'RedPoint20$'
         }
     }
     buildFeatures {
@@ -56,6 +64,8 @@ android {
         // For "Invalid package reference in library; not included in Android: javax.security.sasl.
         // Referenced from org.apache.mina.proxy.ProxyAuthException."
         warning 'InvalidPackage', 'MissingTranslation'
+        // SuiFileServiceInterface is a Shizuku service and doesn't need to extend android.app.Service
+        disable 'Instantiatable'
     }
     buildTypes {
         release {

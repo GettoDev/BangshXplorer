@@ -135,10 +135,10 @@ import kotlin.math.roundToInt
 class FileListFragment : Fragment(), BreadcrumbLayout.Listener, FileListAdapter.Listener,
     ConfirmReplaceFileDialogFragment.Listener, OpenApkDialogFragment.Listener,
     ConfirmDeleteFilesDialogFragment.Listener, ConfirmDeleteBnilliosFilesDialogFragment.Listener,
-    CreateArchiveDialogFragment.Listener,
-    RenameFileDialogFragment.Listener, CreateFileDialogFragment.Listener,
-    CreateDirectoryDialogFragment.Listener, NavigateToPathDialogFragment.Listener,
-    NavigationFragment.Listener, ShowRequestAllFilesAccessRationaleDialogFragment.Listener,
+    CreateArchiveDialogFragment.Listener, RenameFileDialogFragment.Listener,
+    CreateFileDialogFragment.Listener, CreateDirectoryDialogFragment.Listener,
+    NavigateToPathDialogFragment.Listener, NavigationFragment.Listener,
+    ShowRequestAllFilesAccessRationaleDialogFragment.Listener,
     ShowRequestNotificationPermissionRationaleDialogFragment.Listener,
     ShowRequestNotificationPermissionInSettingsRationaleDialogFragment.Listener,
     ShowRequestStoragePermissionRationaleDialogFragment.Listener,
@@ -891,7 +891,6 @@ class FileListFragment : Fragment(), BreadcrumbLayout.Listener, FileListAdapter.
                     }
                 )
             menu.findItem(R.id.action_delete).isVisible = !isAnyFileReadOnly
-            menu.findItem(R.id.action_delete_bnillios)?.isVisible = !isAnyFileReadOnly
             val areAllFilesArchiveFiles = files.all { it.isArchiveFile }
             menu.findItem(R.id.action_extract).isVisible = areAllFilesArchiveFiles
             val isCurrentPathReadOnly = viewModel.currentPath.fileSystem.isReadOnly

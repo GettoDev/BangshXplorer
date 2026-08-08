@@ -6,6 +6,9 @@
 /local.properties
 /signing.jks
 /signing.properties
+/gettodev.jks
+../signing.properties
+../gettodev.jks
 .DS_Store
 *.iml
 *.apk

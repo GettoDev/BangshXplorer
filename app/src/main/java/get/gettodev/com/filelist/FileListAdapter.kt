@@ -331,7 +331,6 @@ class FileListAdapter(
         menu.findItem(R.id.action_copy)
             .setTitle(if (isArchivePath) R.string.file_item_action_extract else R.string.copy)
         menu.findItem(R.id.action_delete).isVisible = !isReadOnly
-        menu.findItem(R.id.action_delete_bnillios)?.isVisible = !isReadOnly
         menu.findItem(R.id.action_rename).isVisible = !isReadOnly
         menu.findItem(R.id.action_extract).isVisible = file.isArchiveFile
         menu.findItem(R.id.action_archive).isVisible = !isArchivePath

@@ -11,10 +11,7 @@ import android.content.ContentValues
 import android.database.Cursor
 import android.net.Uri
 
-lateinit var application: Application internal set
-
-val isApplicationInitialized: Boolean
-    get() = ::application.isInitialized
+lateinit var application: Application private set
 
 class AppProvider : ContentProvider() {
     override fun onCreate(): Boolean {

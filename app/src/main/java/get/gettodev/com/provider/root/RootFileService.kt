@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 2019 Hai Zhang <dreaming.in.code.zh@gmail.com>
+ * Copyright (c) 2026 GettoDev
  * All Rights Reserved.
  */
 
@@ -7,41 +8,43 @@ package get.gettodev.com.provider.root
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.os.Build
 import android.os.Process
 import android.util.Log
-import android.app.Application
-import android.content.ContextWrapper
 import get.gettodev.com.BuildConfig
-import get.gettodev.com.app.application
-import get.gettodev.com.app.isApplicationInitialized
 import get.gettodev.com.provider.FileSystemProviders
 import get.gettodev.com.provider.remote.RemoteFileService
 import get.gettodev.com.provider.remote.RemoteInterface
 import get.gettodev.com.util.lazyReflectedMethod
 
-var isServerProcess = false
-    internal set
-
+/**
+ * True inside an elevated UserService / RootService process.
+ *
+ * - UID 0: libsu or Sui (Magisk)
+ * - UID [Process.SHELL_UID] (2000): Shizuku started via ADB
+ *
+ * Must be true in those processes so [callRootable] uses local syscalls and does not try to
+ * escalate again (which would recurse / time out).
+ */
 val isRunningAsRoot: Boolean
-    get() = Process.myUid() == 0 || Process.myUid() == 2000 || isServerProcess
-
+    get() {
+        val uid = Process.myUid()
+        return uid == 0 || uid == Process.SHELL_UID
+    }
 
 @SuppressLint("StaticFieldLeak")
 lateinit var rootContext: Context private set
 
 object RootFileService : RemoteFileService(
     RemoteInterface {
-        try {
-            SuiFileServiceLauncher.launchService()
-        } catch (e: Exception) {
-            // Log the error for debugging
-            android.util.Log.e("RootFileService", "Shizuku launch failed: ${e.message}", e)
-            if (LibSuFileServiceLauncher.isSuAvailable()) {
+        when {
+            SuiFileServiceLauncher.isSuiAvailable() ->
+                SuiFileServiceLauncher.launchService()
+            Build.VERSION.SDK_INT >= Build.VERSION_CODES.M
+                && ShizukuFileServiceLauncher.isShizukuAvailable() ->
+                ShizukuFileServiceLauncher.launchService()
+            else ->
                 LibSuFileServiceLauncher.launchService()
-            } else {
-                android.util.Log.e("RootFileService", "LibSu also not available")
-                throw e
-            }
         }
     }
 ) {
@@ -60,28 +63,11 @@ object RootFileService : RemoteFileService(
     )
 
     fun main() {
-        isServerProcess = true
-        Log.i(LOG_TAG, "Creating package context (server process)")
+        Log.i(LOG_TAG, "Creating package context (uid=${Process.myUid()})")
         rootContext = createPackageContext(BuildConfig.APPLICATION_ID)
-        if (!isApplicationInitialized) {
-            val app = (rootContext.applicationContext as? Application)
-                ?: (rootContext as? Application)
-                ?: makeApplication(rootContext)
-            application = app
-        }
         Log.i(LOG_TAG, "Installing file system providers")
         FileSystemProviders.install()
         FileSystemProviders.overflowWatchEvents = true
-    }
-
-    private fun makeApplication(context: Context): Application {
-        val app = Application()
-        val attachMethod = ContextWrapper::class.java.getDeclaredMethod(
-            "attachBaseContext", Context::class.java
-        )
-        attachMethod.isAccessible = true
-        attachMethod.invoke(app, context)
-        return app
     }
 
     private fun createPackageContext(packageName: String): Context {

@@ -7,7 +7,6 @@ package get.gettodev.com.settings
 
 import android.content.SharedPreferences
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener
-import android.os.Looper
 import androidx.annotation.AnyRes
 import androidx.annotation.StringRes
 import androidx.lifecycle.LiveData
@@ -24,13 +23,10 @@ abstract class SettingLiveData<T>(
     private val sharedPreferences = getSharedPreferences(nameSuffix)
     private val key = getKey(keyRes, keySuffix)
     private var defaultValue: T? = null
-    private var currentValue: T? = null
 
     constructor(@StringRes keyRes: Int, @AnyRes defaultValueRes: Int) : this(
         null, keyRes, null, defaultValueRes
     )
-
-    override fun getValue(): T? = currentValue ?: super.getValue()
 
     protected fun init() {
         defaultValue = getDefaultValue(defaultValueRes)
@@ -58,13 +54,7 @@ abstract class SettingLiveData<T>(
 
     private fun loadValue() {
         @Suppress("UNCHECKED_CAST")
-        val newValue = getValue(sharedPreferences, key, defaultValue as T)
-        currentValue = newValue
-        if (Looper.myLooper() == Looper.getMainLooper()) {
-            value = newValue
-        } else {
-            postValue(newValue)
-        }
+        value = getValue(sharedPreferences, key, defaultValue as T)
     }
 
     protected abstract fun getValue(

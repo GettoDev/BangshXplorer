@@ -1,6 +1,5 @@
 /*
  * Copyright (c) 2018 Hai Zhang <dreaming.in.code.zh@gmail.com>
- * Copyright (c) 2026 GettoDev
  * All Rights Reserved.
  */
 
@@ -37,28 +36,26 @@ class AboutFragment : Fragment() {
         val activity = requireActivity() as AppCompatActivity
         activity.setSupportActionBar(binding.toolbar)
         activity.supportActionBar!!.setDisplayHomeAsUpEnabled(true)
-        binding.authorGitHubLayout.setOnClickListener {
-            startActivitySafe(AUTHOR_GITHUB_URI.createViewIntent())
-        }
-        binding.authorWebsiteLayout.setOnClickListener {
-            startActivitySafe(AUTHOR_WEBSITE_URI.createViewIntent())
-        }
+        binding.authorGitHubLayout.setOnClickListener { startActivitySafe(GITHUB_URI.createViewIntent()) }
+        binding.authorWebsiteLayout.setOnClickListener { startActivitySafe(WEBSITE_URI.createViewIntent()) }
         binding.originalAuthorNameLayout.setOnClickListener {
-            startActivitySafe(ORIGINAL_AUTHOR_RESUME_URI.createViewIntent())
+            startActivitySafe(AUTHOR_RESUME_URI.createViewIntent())
         }
         binding.originalAuthorGitHubLayout.setOnClickListener {
-            startActivitySafe(ORIGINAL_AUTHOR_GITHUB_URI.createViewIntent())
+            startActivitySafe(AUTHOR_GITHUB_URI.createViewIntent())
         }
         binding.originalAuthorTwitterLayout.setOnClickListener {
-            startActivitySafe(ORIGINAL_AUTHOR_TWITTER_URI.createViewIntent())
+            startActivitySafe(AUTHOR_TWITTER_URI.createViewIntent())
         }
     }
 
     companion object {
-        private val AUTHOR_GITHUB_URI = Uri.parse("https://github.com/GettoDev")
-        private val AUTHOR_WEBSITE_URI = Uri.parse("https://gettodev.github.io/")
-        private val ORIGINAL_AUTHOR_RESUME_URI = Uri.parse("https://resume.zhanghai.me/")
-        private val ORIGINAL_AUTHOR_GITHUB_URI = Uri.parse("https://github.com/zhanghai")
-        private val ORIGINAL_AUTHOR_TWITTER_URI = Uri.parse("https://twitter.com/zhanghai95")
+        private val GITHUB_URI = Uri.parse("https://github.com/GettoDev")
+        private val WEBSITE_URI = Uri.parse("https://gettodev.github.io/")
+        private val PRIVACY_POLICY_URI =
+            Uri.parse("https://github.com/zhanghai/MaterialFiles/blob/master/PRIVACY.md")
+        private val AUTHOR_RESUME_URI = Uri.parse("https://resume.zhanghai.me/")
+        private val AUTHOR_GITHUB_URI = Uri.parse("https://github.com/zhanghai")
+        private val AUTHOR_TWITTER_URI = Uri.parse("https://twitter.com/zhanghai95")
     }
 }
