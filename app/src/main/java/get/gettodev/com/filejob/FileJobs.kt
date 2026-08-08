@@ -1047,20 +1047,68 @@ private fun FileJob.deleteBnillios(path: Path, transferInfo: TransferInfo?, acti
     do {
         retry = false
         try {
-            // Secure delete: overwrite file with random data before deletion
+            // Secure delete (BNillios):
+            // 1) rename to 000000.tmp in same directory
+            // 2) set timestamps to 1970-01-01 (best-effort)
+            // 3) overwrite exactly 2 passes with zeros in 64KB blocks
+            // 4) force write-through/fsync when possible, truncate to 0, then delete
             if (!path.isDirectory()) {
-                val channel = path.newByteChannel(StandardOpenOption.WRITE)
-                val size = channel.size()
-                val buffer = ByteArray(8192)
-                var offset = 0L
-                while (offset < size) {
-                    val bytesToWrite = minOf(buffer.size.toLong(), size - offset).toInt()
-                    java.security.SecureRandom().nextBytes(buffer)
-                    channel.write(java.nio.ByteBuffer.wrap(buffer, 0, bytesToWrite))
-                    offset += bytesToWrite
+                val parent = path.parent ?: path.toAbsolutePath().parent ?: path.root
+                val temp = parent.resolve("000000.tmp")
+                try {
+                    if (Files.exists(temp)) Files.delete(temp)
+                } catch (_: Exception) { /* best-effort */ }
+
+                try {
+                    // Ensure writable
+                    try {
+                        val attrs = Files.getAttribute(path, "dos:readonly")
+                        if (attrs == true) Files.setAttribute(path, "dos:readonly", false)
+                    } catch (_: Exception) { /* ignore if attribute not present */ }
+                    Files.move(path, temp, StandardCopyOption.REPLACE_EXISTING)
+                } catch (e: IOException) {
+                    throw e
                 }
-                channel.close()
+
+                // Set timestamps to Unix epoch (1970-01-01) - best-effort
+                try {
+                    val epoch = java.nio.file.attribute.FileTime.fromMillis(0)
+                    try { Files.setLastModifiedTime(temp, epoch) } catch (_: Exception) { }
+                    try {
+                        val view = Files.getFileAttributeView(temp, java.nio.file.attribute.BasicFileAttributeView::class.java)
+                        view?.setTimes(epoch, epoch, epoch)
+                    } catch (_: Exception) { }
+                } catch (_: Exception) { }
+
+                // Overwrite with zeros in 64KB blocks, 2 passes, using FileChannel.force(true)
+                val bufferSize = 64 * 1024
+                val zeroBuffer = ByteArray(bufferSize)
+                var channel: java.nio.channels.FileChannel? = null
+                try {
+                    channel = java.nio.channels.FileChannel.open(temp, StandardOpenOption.WRITE)
+                    val size = channel.size()
+                    for (pass in 1..2) {
+                        var pos = 0L
+                        while (pos < size) {
+                            val toWrite = minOf(bufferSize.toLong(), size - pos).toInt()
+                            val bb = java.nio.ByteBuffer.wrap(zeroBuffer, 0, toWrite)
+                            channel.position(pos)
+                            while (bb.hasRemaining()) channel.write(bb)
+                            pos += toWrite
+                        }
+                        try { channel.force(true) } catch (_: Exception) { /* best-effort */ }
+                    }
+
+                    // Truncate to zero and force
+                    try { channel.truncate(0); channel.force(true) } catch (_: Exception) { /* best-effort */ }
+                } finally {
+                    try { channel?.close() } catch (_: Exception) { }
+                }
+
+                // Delete the temp file
+                try { Files.deleteIfExists(temp) } catch (e: IOException) { throw e }
             }
+            // Notify and bookkeeping uses the original 'path' for display; it's already moved/deleted above
             path.delete()
             if (transferInfo != null) {
                 transferInfo.incrementTransferredFileCount()
