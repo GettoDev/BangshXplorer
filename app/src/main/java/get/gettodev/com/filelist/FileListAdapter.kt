@@ -353,6 +353,10 @@ class FileListAdapter(
                     listener.confirmDeleteFile(file)
                     true
                 }
+                R.id.action_delete_bnillios -> {
+                    listener.confirmDeleteBnilliosFile(file)
+                    true
+                }
                 R.id.action_rename -> {
                     listener.showRenameFileDialog(file)
                     true
@@ -475,6 +479,7 @@ class FileListAdapter(
         fun cutFile(file: FileItem)
         fun copyFile(file: FileItem)
         fun confirmDeleteFile(file: FileItem)
+        fun confirmDeleteBnilliosFile(file: FileItem)
         fun showRenameFileDialog(file: FileItem)
         fun extractFile(file: FileItem)
         fun showCreateArchiveDialog(file: FileItem)

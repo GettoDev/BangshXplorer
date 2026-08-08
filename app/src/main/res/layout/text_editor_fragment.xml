@@ -56,18 +56,16 @@
             android:id="@+id/scrollView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:clipToPadding="false"
             android:fillViewport="true">
-
             <get.gettodev.com.ui.ScrollingChildEditText
                 android:id="@+id/textEdit"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:padding="@dimen/screen_edge_margin"
                 android:background="@null"
-                android:gravity="top"
-                android:importantForAutofill="no"
-                android:inputType="textMultiLine"
+                android:gravity="top|start"
+                android:inputType="textMultiLine|textNoSuggestions"
+                android:minHeight="200dp"
+                android:padding="@dimen/screen_edge_margin"
                 android:textAppearance="?textAppearanceListItemSecondary">
                 <requestFocus />
             </get.gettodev.com.ui.ScrollingChildEditText>

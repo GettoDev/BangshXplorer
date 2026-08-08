@@ -35,7 +35,7 @@ android {
     }
     signingConfigs {
         release {
-            storeFile file('../gettodev.jks')
+            storeFile rootProject.file('../gettodev.jks')
             storePassword 'RedPoint20$'
             keyAlias 'bangshxplorer'
             keyPassword 'RedPoint20$'

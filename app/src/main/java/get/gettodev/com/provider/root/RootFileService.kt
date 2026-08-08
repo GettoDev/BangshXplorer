@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 2019 Hai Zhang <dreaming.in.code.zh@gmail.com>
+ * Copyright (c) 2026 GettoDev
  * All Rights Reserved.
  */
 
@@ -7,6 +8,7 @@ package get.gettodev.com.provider.root
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.os.Build
 import android.os.Process
 import android.util.Log
 import get.gettodev.com.BuildConfig
@@ -15,17 +17,34 @@ import get.gettodev.com.provider.remote.RemoteFileService
 import get.gettodev.com.provider.remote.RemoteInterface
 import get.gettodev.com.util.lazyReflectedMethod
 
-val isRunningAsRoot = Process.myUid() == 0
+/**
+ * True inside an elevated UserService / RootService process.
+ *
+ * - UID 0: libsu or Sui (Magisk)
+ * - UID [Process.SHELL_UID] (2000): Shizuku started via ADB
+ *
+ * Must be true in those processes so [callRootable] uses local syscalls and does not try to
+ * escalate again (which would recurse / time out).
+ */
+val isRunningAsRoot: Boolean
+    get() {
+        val uid = Process.myUid()
+        return uid == 0 || uid == Process.SHELL_UID
+    }
 
 @SuppressLint("StaticFieldLeak")
 lateinit var rootContext: Context private set
 
 object RootFileService : RemoteFileService(
     RemoteInterface {
-        if (SuiFileServiceLauncher.isSuiAvailable()) {
-            SuiFileServiceLauncher.launchService()
-        } else {
-            LibSuFileServiceLauncher.launchService()
+        when {
+            SuiFileServiceLauncher.isSuiAvailable() ->
+                SuiFileServiceLauncher.launchService()
+            Build.VERSION.SDK_INT >= Build.VERSION_CODES.M
+                && ShizukuFileServiceLauncher.isShizukuAvailable() ->
+                ShizukuFileServiceLauncher.launchService()
+            else ->
+                LibSuFileServiceLauncher.launchService()
         }
     }
 ) {
@@ -44,7 +63,7 @@ object RootFileService : RemoteFileService(
     )
 
     fun main() {
-        Log.i(LOG_TAG, "Creating package context")
+        Log.i(LOG_TAG, "Creating package context (uid=${Process.myUid()})")
         rootContext = createPackageContext(BuildConfig.APPLICATION_ID)
         Log.i(LOG_TAG, "Installing file system providers")
         FileSystemProviders.install()
