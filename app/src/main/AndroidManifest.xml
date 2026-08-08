@@ -389,6 +389,11 @@
             android:exported="false"
             android:process=":sui" />
 
+        <service
+            android:name="get.gettodev.com.provider.root.ShizukuFileServiceInterface"
+            android:exported="false"
+            android:process=":shizuku" />
+
         <provider
             android:name="get.gettodev.com.app.AppProvider"
             android:authorities="@string/app_provider_authority"
@@ -410,6 +415,10 @@
         <meta-data
             android:name="moe.shizuku.client.V3_SUPPORT"
             android:value="true" />
+
+        <meta-data
+            android:name="moe.shizuku.client.SERVER_VERSION"
+            android:value="13" />
 
         <receiver android:name="get.gettodev.com.filejob.FileJobReceiver" />
 

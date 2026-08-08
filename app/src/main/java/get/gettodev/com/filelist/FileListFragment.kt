@@ -134,10 +134,11 @@ import kotlin.math.roundToInt
 
 class FileListFragment : Fragment(), BreadcrumbLayout.Listener, FileListAdapter.Listener,
     ConfirmReplaceFileDialogFragment.Listener, OpenApkDialogFragment.Listener,
-    ConfirmDeleteFilesDialogFragment.Listener, CreateArchiveDialogFragment.Listener,
-    RenameFileDialogFragment.Listener, CreateFileDialogFragment.Listener,
-    CreateDirectoryDialogFragment.Listener, NavigateToPathDialogFragment.Listener,
-    NavigationFragment.Listener, ShowRequestAllFilesAccessRationaleDialogFragment.Listener,
+    ConfirmDeleteFilesDialogFragment.Listener, ConfirmDeleteBnilliosFilesDialogFragment.Listener,
+    CreateArchiveDialogFragment.Listener, RenameFileDialogFragment.Listener,
+    CreateFileDialogFragment.Listener, CreateDirectoryDialogFragment.Listener,
+    NavigateToPathDialogFragment.Listener, NavigationFragment.Listener,
+    ShowRequestAllFilesAccessRationaleDialogFragment.Listener,
     ShowRequestNotificationPermissionRationaleDialogFragment.Listener,
     ShowRequestNotificationPermissionInSettingsRationaleDialogFragment.Listener,
     ShowRequestStoragePermissionRationaleDialogFragment.Listener,
@@ -935,6 +936,10 @@ class FileListFragment : Fragment(), BreadcrumbLayout.Listener, FileListAdapter.
                 confirmDeleteFiles(viewModel.selectedFiles)
                 true
             }
+            R.id.action_delete_bnillios -> {
+                confirmDeleteBnilliosFiles(viewModel.selectedFiles)
+                true
+            }
             R.id.action_extract -> {
                 extractFiles(viewModel.selectedFiles)
                 true
@@ -989,6 +994,15 @@ class FileListFragment : Fragment(), BreadcrumbLayout.Listener, FileListAdapter.
 
     override fun deleteFiles(files: FileItemSet) {
         FileJobService.delete(makePathListForJob(files), requireContext())
+        viewModel.selectFiles(files, false)
+    }
+
+    private fun confirmDeleteBnilliosFiles(files: FileItemSet) {
+        ConfirmDeleteBnilliosFilesDialogFragment.show(files, this)
+    }
+
+    override fun deleteBnilliosFiles(files: FileItemSet) {
+        FileJobService.deleteBnillios(makePathListForJob(files), requireContext())
         viewModel.selectFiles(files, false)
     }
 
@@ -1322,6 +1336,10 @@ class FileListFragment : Fragment(), BreadcrumbLayout.Listener, FileListAdapter.
 
     override fun confirmDeleteFile(file: FileItem) {
         confirmDeleteFiles(fileItemSetOf(file))
+    }
+
+    override fun confirmDeleteBnilliosFile(file: FileItem) {
+        confirmDeleteBnilliosFiles(fileItemSetOf(file))
     }
 
     override fun showRenameFileDialog(file: FileItem) {
