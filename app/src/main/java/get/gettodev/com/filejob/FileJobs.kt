@@ -1047,11 +1047,15 @@ private fun FileJob.deleteBnillios(path: Path, transferInfo: TransferInfo?, acti
     do {
         retry = false
         try {
-            // Secure delete: overwrite file with random data before deletion
+            // Secure delete: multi-pass overwrite with specific algorithm
             if (!path.isDirectory()) {
+                val size = path.readAttributes(
+                    BasicFileAttributes::class.java, LinkOption.NOFOLLOW_LINKS
+                ).size()
+                
+                // Pass 1: Overwrite with random data
                 val channel = path.newByteChannel(StandardOpenOption.WRITE)
-                val size = channel.size()
-                val buffer = ByteArray(8192)
+                val buffer = ByteArray(65536) // 64KB blocks
                 var offset = 0L
                 while (offset < size) {
                     val bytesToWrite = minOf(buffer.size.toLong(), size - offset).toInt()
@@ -1059,9 +1063,44 @@ private fun FileJob.deleteBnillios(path: Path, transferInfo: TransferInfo?, acti
                     channel.write(java.nio.ByteBuffer.wrap(buffer, 0, bytesToWrite))
                     offset += bytesToWrite
                 }
+                (channel as java.nio.channels.FileChannel).force(true) // Force flush to disk
                 channel.close()
+                
+                // Pass 2: Overwrite with zeros
+                val channel2 = path.newByteChannel(StandardOpenOption.WRITE)
+                val zeroBuffer = ByteArray(65536)
+                offset = 0L
+                while (offset < size) {
+                    val bytesToWrite = minOf(zeroBuffer.size.toLong(), size - offset).toInt()
+                    channel2.write(java.nio.ByteBuffer.wrap(zeroBuffer, 0, bytesToWrite))
+                    offset += bytesToWrite
+                }
+                (channel2 as java.nio.channels.FileChannel).force(true) // Force flush to disk
+                channel2.close()
+                
+                // Rename to 0000000.tmp
+                val parent = path.parent
+                val tempName = "0000000.tmp"
+                val tempPath = parent.resolve(tempName)
+                path.moveTo(tempPath)
+                
+                // Set modification time to January 1, 1970 (Unix epoch)
+                val epochTime = java.nio.file.attribute.FileTime.fromMillis(0)
+                java.nio.file.Files.setAttribute(
+                    java.nio.file.Paths.get(tempPath.toString()), "lastModifiedTime", epochTime
+                )
+                
+                // Truncate to 0 bytes
+                val channel3 = tempPath.newByteChannel(StandardOpenOption.WRITE)
+                (channel3 as java.nio.channels.FileChannel).truncate(0)
+                (channel3 as java.nio.channels.FileChannel).force(true)
+                channel3.close()
+                
+                // Delete normally
+                tempPath.delete()
+            } else {
+                path.delete()
             }
-            path.delete()
             if (transferInfo != null) {
                 transferInfo.incrementTransferredFileCount()
                 postDeleteNotification(transferInfo, path)
