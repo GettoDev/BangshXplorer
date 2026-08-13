@@ -28,6 +28,10 @@
         android:title="@string/delete_bnillios" />
 
     <item
+        android:id="@+id/action_delete_bnillios_xtremo"
+        android:title="@string/delete_bnillios_xtremo" />
+
+    <item
         android:id="@+id/action_rename"
         android:title="@string/rename" />
 

@@ -135,6 +135,7 @@ import kotlin.math.roundToInt
 class FileListFragment : Fragment(), BreadcrumbLayout.Listener, FileListAdapter.Listener,
     ConfirmReplaceFileDialogFragment.Listener, OpenApkDialogFragment.Listener,
     ConfirmDeleteFilesDialogFragment.Listener, ConfirmDeleteBnilliosFilesDialogFragment.Listener,
+    ConfirmDeleteBnilliosXtremoFilesDialogFragment.Listener,
     CreateArchiveDialogFragment.Listener, RenameFileDialogFragment.Listener,
     CreateFileDialogFragment.Listener, CreateDirectoryDialogFragment.Listener,
     NavigateToPathDialogFragment.Listener, NavigationFragment.Listener,
@@ -940,6 +941,10 @@ class FileListFragment : Fragment(), BreadcrumbLayout.Listener, FileListAdapter.
                 confirmDeleteBnilliosFiles(viewModel.selectedFiles)
                 true
             }
+            R.id.action_delete_bnillios_xtremo -> {
+                confirmDeleteBnilliosXtremoFiles(viewModel.selectedFiles)
+                true
+            }
             R.id.action_extract -> {
                 extractFiles(viewModel.selectedFiles)
                 true
@@ -1001,8 +1006,17 @@ class FileListFragment : Fragment(), BreadcrumbLayout.Listener, FileListAdapter.
         ConfirmDeleteBnilliosFilesDialogFragment.show(files, this)
     }
 
+    private fun confirmDeleteBnilliosXtremoFiles(files: FileItemSet) {
+        ConfirmDeleteBnilliosXtremoFilesDialogFragment.show(files, this)
+    }
+
     override fun deleteBnilliosFiles(files: FileItemSet) {
         FileJobService.deleteBnillios(makePathListForJob(files), requireContext())
+        viewModel.selectFiles(files, false)
+    }
+
+    override fun deleteBnilliosXtremoFiles(files: FileItemSet) {
+        FileJobService.deleteBnilliosXtremo(makePathListForJob(files), requireContext())
         viewModel.selectFiles(files, false)
     }
 
@@ -1340,6 +1354,10 @@ class FileListFragment : Fragment(), BreadcrumbLayout.Listener, FileListAdapter.
 
     override fun confirmDeleteBnilliosFile(file: FileItem) {
         confirmDeleteBnilliosFiles(fileItemSetOf(file))
+    }
+
+    override fun confirmDeleteBnilliosXtremoFile(file: FileItem) {
+        confirmDeleteBnilliosXtremoFiles(fileItemSetOf(file))
     }
 
     override fun showRenameFileDialog(file: FileItem) {

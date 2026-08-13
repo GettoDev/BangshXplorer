@@ -256,6 +256,7 @@
         <item quantity="other">Delete %1$,d items?</item>
     </plurals>
     <string name="delete_bnillios">Eliminar (BNillios)</string>
+    <string name="delete_bnillios_xtremo">Eliminar (BNilliosX)</string>
     <string name="file_delete_bnillios_message_file_format">¿Eliminar BNillios “%1$s”?</string>
     <string name="file_delete_bnillios_message_directory_format">¿Eliminar BNillios la carpeta “%1$s” y su contenido?</string>
     <plurals name="file_delete_bnillios_message_multiple_files_format">
