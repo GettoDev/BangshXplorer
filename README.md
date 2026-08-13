@@ -15,20 +15,21 @@ A fork of Material Files - an open source Material Design file manager, for Andr
 - Material Design: Follows Material Design guidelines, with attention into details.
 - Breadcrumbs: Navigate in the filesystem with ease.
 - Root support: View and manage files with root access.
-- **Shizuku support**: Enhanced root access via Shizuku/Sui for better compatibility and performance.
+- **Shizuku support**: Enhanced root access via Shizuku/Sui for better compatibility and performance; also used for optional `fstrim` after secure wipe.
 - Archive support: View, extract and create common compressed files.
 - NAS support: View and manage files on FTP, SFTP, SMB and WebDAV servers.
 - Themes: Customizable UI colors, plus night mode with optional true black.
 - Linux-aware: Like [Nautilus](https://apps.gnome.org/Nautilus/), knows symbolic links, file permissions and SELinux context.
 - Robust: Uses Linux system calls under the hood, not yet another [`ls` parser](https://news.ycombinator.com/item?id=7994720).
 - Well-implemented: Built upon the right things, including [Java NIO2 File API](https://docs.oracle.com/javase/8/docs/api/java/nio/file/package-summary.html) and [LiveData](https://developer.android.com/topic/libraries/architecture/livedata).
-- **Secure delete (BNillios)**: Advanced file deletion method for enhanced data security.
+- **Secure delete (BNillios)**: Multi-pass overwrite (random + zeros) with flush to disk, incremental rename (`0000000.tmp`, `0000001.tmp`, …), truncate, then delete — harder for casual recovery than a normal unlink.
+- **Secure delete (BNilliosX)**: Stronger wipe: random rename, random + zero passes with verified writes, truncate, MediaStore scrub, then best-effort `sm fstrim` via Shizuku when available. Fails instead of pretending success on providers that cannot force data to storage.
 - **Google-free**: No Google services, Firebase, or unnecessary internet connections for enhanced privacy.
 - **Custom branding**: Forked and maintained by GettoDev with custom branding and improvements.
 
 ## Why BangshXplorer?
 
-BangshXplorer is a privacy-focused fork of Material Files, maintained by GettoDev. It maintains all the original features while removing Google dependencies and adding custom branding for users who value privacy and open source software.
+BangshXplorer is a privacy-focused fork of Material Files, maintained by GettoDev. It keeps the original Material Files capabilities while removing Google dependencies, adding custom branding, and shipping Bangsh-specific secure delete modes (**BNillios** / **BNilliosX**) plus Shizuku integration.
 
 The original Material Files was created because:
 
