@@ -79,6 +79,7 @@ import get.gettodev.com.provider.common.setOwner
 import get.gettodev.com.provider.common.setSeLinuxContext
 import get.gettodev.com.provider.common.toByteString
 import get.gettodev.com.provider.common.toModeString
+import get.gettodev.com.provider.root.FstrimViaShizuku
 import get.gettodev.com.provider.linux.isLinuxPath
 import get.gettodev.com.util.asFileName
 import get.gettodev.com.util.createInstallPackageIntent
@@ -995,11 +996,12 @@ class DeleteFileJob(private val paths: List<Path>) : FileJob() {
 class DeleteBnilliosFileJob(private val paths: List<Path>) : FileJob() {
     @Throws(IOException::class)
     override fun run() {
+        val tempFileCounter = java.util.concurrent.atomic.AtomicInteger(0)
         val scanInfo = scan(paths, R.plurals.file_job_delete_scan_notification_title_format)
         val transferInfo = TransferInfo(scanInfo, null)
         val actionAllInfo = ActionAllInfo()
         for (path in paths) {
-            deleteRecursivelyBnillios(path, transferInfo, actionAllInfo)
+            deleteRecursivelyBnillios(path, transferInfo, actionAllInfo, tempFileCounter)
             throwIfInterrupted()
         }
     }
@@ -1008,12 +1010,13 @@ class DeleteBnilliosFileJob(private val paths: List<Path>) : FileJob() {
     private fun deleteRecursivelyBnillios(
         path: Path,
         transferInfo: TransferInfo,
-        actionAllInfo: ActionAllInfo
+        actionAllInfo: ActionAllInfo,
+        tempFileCounter: java.util.concurrent.atomic.AtomicInteger
     ) {
         Files.walkFileTree(path, object : SimpleFileVisitor<Path>() {
             @Throws(IOException::class)
             override fun visitFile(file: Path, attributes: BasicFileAttributes): FileVisitResult {
-                deleteBnillios(file, transferInfo, actionAllInfo)
+                deleteBnillios(file, transferInfo, actionAllInfo, tempFileCounter)
                 throwIfInterrupted()
                 return FileVisitResult.CONTINUE
             }
@@ -1033,7 +1036,64 @@ class DeleteBnilliosFileJob(private val paths: List<Path>) : FileJob() {
                 if (exception != null) {
                     throw exception
                 }
-                deleteBnillios(directory, transferInfo, actionAllInfo)
+                deleteBnillios(directory, transferInfo, actionAllInfo, tempFileCounter)
+                throwIfInterrupted()
+                return FileVisitResult.CONTINUE
+            }
+        })
+    }
+}
+
+class DeleteBnilliosXtremoFileJob(private val paths: List<Path>) : FileJob() {
+    @Throws(IOException::class)
+    override fun run() {
+        val scanInfo = scan(paths, R.plurals.file_job_delete_scan_notification_title_format)
+        val transferInfo = TransferInfo(scanInfo, null)
+        val actionAllInfo = ActionAllInfo()
+        for (path in paths) {
+            deleteRecursivelyBnilliosXtremo(path, transferInfo, actionAllInfo)
+            throwIfInterrupted()
+        }
+        // Best-effort TRIM after secure wipes (Shizuku shell / Sui).
+        FstrimViaShizuku.tryRunAfterSecureDelete()
+    }
+
+    @Throws(IOException::class)
+    private fun deleteRecursivelyBnilliosXtremo(
+        path: Path,
+        transferInfo: TransferInfo,
+        actionAllInfo: ActionAllInfo
+    ) {
+        // Default walk does not follow symlinks; wipe targets, not link destinations.
+        Files.walkFileTree(path, object : SimpleFileVisitor<Path>() {
+            @Throws(IOException::class)
+            override fun visitFile(file: Path, attributes: BasicFileAttributes): FileVisitResult {
+                deleteBnilliosXtremo(file, attributes, transferInfo, actionAllInfo)
+                throwIfInterrupted()
+                return FileVisitResult.CONTINUE
+            }
+
+            @Throws(IOException::class)
+            override fun visitFileFailed(file: Path, exception: IOException): FileVisitResult {
+                return super.visitFileFailed(file, exception)
+            }
+
+            @Throws(IOException::class)
+            override fun postVisitDirectory(
+                directory: Path,
+                exception: IOException?
+            ): FileVisitResult {
+                if (exception != null) {
+                    throw exception
+                }
+                deleteBnilliosXtremo(
+                    directory,
+                    directory.readAttributes(
+                        BasicFileAttributes::class.java, LinkOption.NOFOLLOW_LINKS
+                    ),
+                    transferInfo,
+                    actionAllInfo
+                )
                 throwIfInterrupted()
                 return FileVisitResult.CONTINUE
             }
@@ -1042,26 +1102,156 @@ class DeleteBnilliosFileJob(private val paths: List<Path>) : FileJob() {
 }
 
 @Throws(IOException::class)
-private fun FileJob.deleteBnillios(path: Path, transferInfo: TransferInfo?, actionAllInfo: ActionAllInfo) {
+private fun FileJob.deleteBnilliosXtremo(
+    path: Path,
+    attributes: BasicFileAttributes,
+    transferInfo: TransferInfo?,
+    actionAllInfo: ActionAllInfo
+) {
     var retry: Boolean
     do {
         retry = false
         try {
-            // Secure delete: overwrite file with random data before deletion
+            when {
+                attributes.isSymbolicLink -> {
+                    // Unlink only; never overwrite through the link.
+                    path.delete()
+                }
+                attributes.isDirectory -> {
+                    path.delete()
+                }
+                else -> {
+                    secureWipeBnilliosXFile(path, attributes.size())
+                }
+            }
+            if (transferInfo != null) {
+                transferInfo.incrementTransferredFileCount()
+                postDeleteNotification(transferInfo, path)
+            }
+        } catch (e: InterruptedIOException) {
+            throw e
+        } catch (e: IOException) {
+            e.printStackTrace()
+            if (actionAllInfo.skipDeleteError) {
+                if (transferInfo != null) {
+                    transferInfo.skipFileIgnoringSize()
+                    postDeleteNotification(transferInfo, path)
+                }
+                return
+            }
+            if (e is UserActionRequiredException) {
+                val result = showUserAction(e)
+                if (result) {
+                    retry = true
+                    continue
+                }
+            }
+            val result = showErrorDialog(
+                getString(R.string.file_job_delete_error_title),
+                getString(
+                    R.string.file_job_delete_error_message_format, getFileName(path), e.toString()
+                ),
+                getReadOnlyFileStore(path, e),
+                true,
+                getString(R.string.retry),
+                getString(R.string.skip),
+                getString(android.R.string.cancel)
+            )
+            when (result.action) {
+                FileJobErrorAction.POSITIVE -> {
+                    retry = true
+                    continue
+                }
+                FileJobErrorAction.NEGATIVE -> {
+                    if (result.isAll) {
+                        actionAllInfo.skipDeleteError = true
+                    }
+                    if (transferInfo != null) {
+                        transferInfo.skipFileIgnoringSize()
+                        postDeleteNotification(transferInfo, path)
+                    }
+                    return
+                }
+                FileJobErrorAction.CANCELED -> {
+                    if (transferInfo != null) {
+                        transferInfo.skipFileIgnoringSize()
+                        postDeleteNotification(transferInfo, path)
+                    }
+                    return
+                }
+                FileJobErrorAction.NEUTRAL -> throw InterruptedIOException()
+                else -> throw AssertionError(result.action)
+            }
+        }
+    } while (retry)
+}
+
+@Throws(IOException::class)
+private fun FileJob.deleteBnillios(
+    path: Path,
+    transferInfo: TransferInfo?,
+    actionAllInfo: ActionAllInfo,
+    counter: java.util.concurrent.atomic.AtomicInteger
+) {
+    var retry: Boolean
+    do {
+        retry = false
+        try {
+            // Secure delete: multi-pass overwrite with specific algorithm
             if (!path.isDirectory()) {
+                val size = path.readAttributes(
+                    BasicFileAttributes::class.java, LinkOption.NOFOLLOW_LINKS
+                ).size()
+                val random = java.security.SecureRandom()
+
+                // Pass 1: Overwrite with random data
                 val channel = path.newByteChannel(StandardOpenOption.WRITE)
-                val size = channel.size()
-                val buffer = ByteArray(8192)
+                val buffer = ByteArray(65536) // 64KB blocks
                 var offset = 0L
                 while (offset < size) {
                     val bytesToWrite = minOf(buffer.size.toLong(), size - offset).toInt()
-                    java.security.SecureRandom().nextBytes(buffer)
+                    random.nextBytes(buffer)
                     channel.write(java.nio.ByteBuffer.wrap(buffer, 0, bytesToWrite))
                     offset += bytesToWrite
                 }
+                (channel as java8.nio.channels.FileChannel).force(true)
                 channel.close()
+
+                // Pass 2: Overwrite with zeros
+                val channel2 = path.newByteChannel(StandardOpenOption.WRITE)
+                val zeroBuffer = ByteArray(65536)
+                offset = 0L
+                while (offset < size) {
+                    val bytesToWrite = minOf(zeroBuffer.size.toLong(), size - offset).toInt()
+                    channel2.write(java.nio.ByteBuffer.wrap(zeroBuffer, 0, bytesToWrite))
+                    offset += bytesToWrite
+                }
+                (channel2 as java8.nio.channels.FileChannel).force(true)
+                channel2.close()
+
+                // Rename to sequential temp file (0000000.tmp, 0000001.tmp, etc.)
+                val parent = path.parent
+                val tempName = String.format("%07d.tmp", counter.getAndIncrement())
+                val tempPath = parent.resolve(tempName)
+                path.moveTo(tempPath)
+
+                // Set modification time to January 1, 1970 (Unix epoch)
+                val epochTime = java.nio.file.attribute.FileTime.fromMillis(0)
+                java.nio.file.Files.setAttribute(
+                    java.nio.file.Paths.get(tempPath.toString()), "lastModifiedTime", epochTime
+                )
+
+                // Truncate to 0 bytes
+                val channel3 = tempPath.newByteChannel(StandardOpenOption.WRITE)
+                (channel3 as java8.nio.channels.FileChannel).truncate(0)
+                (channel3 as java8.nio.channels.FileChannel).force(true)
+                channel3.close()
+
+                // Delete normally
+                tempPath.delete()
+            } else {
+                path.delete()
             }
-            path.delete()
             if (transferInfo != null) {
                 transferInfo.incrementTransferredFileCount()
                 postDeleteNotification(transferInfo, path)
